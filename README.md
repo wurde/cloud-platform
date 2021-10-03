@@ -32,7 +32,6 @@ terraform {
     region = "us-east-1"
   }
 
-  # Specify all of the required providers.
   required_providers {
     # https://registry.terraform.io/providers/hashicorp/aws
     aws = {
@@ -63,8 +62,8 @@ module "cloud-platform" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aws_cloud"></a> [aws-cloud](./modules/aws-cloud/README.md) | ./modules/aws-cloud |  |
-| <a name="module_gcp_cloud"></a> [gcp-cloud](./modules/gcp-cloud/README.md) | ./modules/gcp-cloud |  |
+| <a name="module_cloud_aws"></a> [cloud-aws](./modules/cloud-aws/README.md) | ./modules/cloud-aws |  |
+| <a name="module_cloud_gcp"></a> [cloud-gcp](./modules/cloud-gcp/README.md) | ./modules/cloud-gcp |  |
 
 ## Inputs
 

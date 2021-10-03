@@ -1,6 +1,6 @@
 # Cloud Platform
 
-A multi-cloud Kubernetes environment.
+A Kubernetes environment.
 
 ## Prerequisites
 

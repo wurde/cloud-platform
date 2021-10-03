@@ -90,6 +90,8 @@ module "cloud-platform" {
 | <a name="input_cloud"></a> [cloud](#input_cloud) | What cloud do you want to deploy to? AWS or GCP? | `string` | `aws` | no |
 | <a name="input_region"></a> [region](#input_region) | What region do you want to deploy to? | `string` | `us-west-2` | no |
 | <a name="input_wait_for_cluster_timeout"></a> [wait_for_cluster_timeout](#input_wait_for_cluster_timeout) | A timeout (in seconds) to wait for cluster to be available. | `number` | `300` | no |
+| <a name="input_write_kubeconfig"></a> [write_kubeconfig](#input_write_kubeconfig) | Whether to write a Kubectl config file containing the cluster configuration. Saved to kubeconfig_output_path. | `bool` | `true` | no |
+| <a name="input_kubeconfig_output_path"></a> [kubeconfig_output_path](#input_kubeconfig_output_path) | Where to save the Kubectl config file (if write_kubeconfig = true). | `string` | `./` | no |
 
 ## Outputs
 

@@ -33,6 +33,12 @@ variable "wait_for_cluster_timeout" {
   default     = 300
 }
 
+variable "cluster_log_retention_in_days" {
+  description = "Number of days to retain log events. Default retention - 90 days."
+  type        = number
+  default     = 90
+}
+
 variable "write_kubeconfig" {
   description = "Whether to write a Kubectl config file containing the cluster configuration. Saved to kubeconfig_output_path."
   type        = bool

@@ -90,9 +90,16 @@ module "cloud-platform" {
 | <a name="input_cloud"></a> [cloud](#input_cloud) | What cloud do you want to deploy to? AWS or GCP? | `string` | `aws` | no |
 | <a name="input_region"></a> [region](#input_region) | What region do you want to deploy to? | `string` | `us-west-2` | no |
 | <a name="input_cluster_version"></a> [cluster_version](#input_cluster_version) | Kubernetes version to use for the EKS cluster. | `string` | `1.21` | no |
+| <a name="input_cluster_name"></a> [cluster_name](#input_cluster_name) | Name of the EKS cluster. Also used as a prefix in names of related resources. | `string` | `""` | no |
 | <a name="input_wait_for_cluster_timeout"></a> [wait_for_cluster_timeout](#input_wait_for_cluster_timeout) | A timeout (in seconds) to wait for cluster to be available. | `number` | `300` | no |
+| <a name="input_cluster_log_retention_in_days"></a> [cluster_log_retention_in_days](#input_cluster_log_retention_in_days) | Number of days to retain log events. Default retention - 90 days. | `number` | `90` | no |
 | <a name="input_write_kubeconfig"></a> [write_kubeconfig](#input_write_kubeconfig) | Whether to write a Kubectl config file containing the cluster configuration. Saved to kubeconfig_output_path. | `bool` | `true` | no |
 | <a name="input_kubeconfig_output_path"></a> [kubeconfig_output_path](#input_kubeconfig_output_path) | Where to save the Kubectl config file (if write_kubeconfig = true). | `string` | `./` | no |
+| <a name="input_kubeconfig_file_permission"></a> [kubeconfig_file_permission](#input_kubeconfig_file_permission) | File permission of the Kubectl config file containing cluster configuration saved to `kubeconfig_output_path. | `string` | `0600` | no |
+| <a name="input_kubeconfig_aws_authenticator_command"></a> [kubeconfig_aws_authenticator_command](#input_kubeconfig_aws_authenticator_command) | Command to use to fetch AWS EKS credentials. | `string` | `aws-iam-authenticator` | no |
+| <a name="input_kubeconfig_aws_authenticator_command_args"></a> [kubeconfig_aws_authenticator_command_args](#input_kubeconfig_aws_authenticator_command_args) | Default arguments passed to the authenticator command. Defaults to [token -i $cluster_name]. | `list(string)` | `[]` | no |
+| <a name="input_kubeconfig_aws_authenticator_additional_args"></a> [kubeconfig_aws_authenticator_additional_args](#input_kubeconfig_aws_authenticator_additional_args) | Any additional arguments to pass to the authenticator such as the role to assume. e.g. [\"-r\", \"MyEksRole\"]. | `list(string)` | `[]` | no |
+| <a name="input_kubeconfig_aws_authenticator_env_variables"></a> [kubeconfig_aws_authenticator_env_variables](#input_kubeconfig_aws_authenticator_env_variables) | Environment variables that should be used when executing the authenticator. e.g. { AWS_PROFILE = \"eks\"}. | `map(string)` | `{}` | no |
 
 ## Outputs
 

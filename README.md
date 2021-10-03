@@ -71,6 +71,8 @@ module "cloud-platform" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloud"></a> [cloud](#input_cloud) | What cloud do you want to deploy to? AWS or GCP? | `string` | `aws` | no |
+| <a name="input_region"></a> [region](#input_region) | What region do you want to deploy to? | `string` | `us-west-2` | no |
+| <a name="input_wait_for_cluster_timeout"></a> [wait_for_cluster_timeout](#input_wait_for_cluster_timeout) | A timeout (in seconds) to wait for cluster to be available. | `number` | `300` | no |
 
 ## Outputs
 

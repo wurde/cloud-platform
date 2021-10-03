@@ -1,3 +1,18 @@
+# AWS Identity and Access Management (IAM)
+# https://aws.amazon.com/iam
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
+# resource "aws_iam_role" "cluster" {
+#   name_prefix           = var.cluster_iam_role_name != "" ? null : var.cluster_name
+#   name                  = var.cluster_iam_role_name != "" ? var.cluster_iam_role_name : null
+#   assume_role_policy    = data.aws_iam_policy_document.cluster_assume_role_policy.json
+#   permissions_boundary  = var.permissions_boundary
+#   path                  = var.iam_path
+#   force_detach_policies = true
+
+#   tags = var.tags
+# }
+
 # Following IAM permissions are the minimum permissions
 # needed for your IAM user or IAM role to create an EKS
 # cluster on AWS.

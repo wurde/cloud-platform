@@ -103,23 +103,6 @@ variable "cluster_update_timeout" {
   default     = "60m"
 }
 
-variable "permissions_boundary" {
-  description = "If provided, all IAM roles will be created with this permissions boundary attached."
-  type        = string
-  default     = null
-}
-
-variable "iam_path" {
-  description = "If provided, all IAM roles will be created on this path."
-  type        = string
-  default     = "/"
-}
-
-variable "workers_role_name" {
-  description = "User defined workers role name."
-  type        = string
-  default     = ""
-}
 variable "worker_groups" {
   description = "A list of maps defining worker group configurations to be defined using AWS Launch Configurations."
   type        = list(any)

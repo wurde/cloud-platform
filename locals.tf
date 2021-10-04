@@ -1,12 +1,15 @@
 locals {
-  cluster_name = "eks-${random_string.suffix.result}"
+  cluster_name = "eks-cluster-${random_string.suffix.result}"
 
   # cluster_id          = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].id, [""])[0]
   # cluster_auth_base64 = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].certificate_authority[0].data, [""])[0]
   # cluster_endpoint    = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].endpoint, [""])[0]
 
-  cluster_iam_role_name = "eks-cluster-${random_string.suffix.result}"
+  workers_iam_role_name = locals.cluster_name
+  cluster_iam_role_name = locals.cluster_name
   cluster_iam_role_arn  = join("", aws_iam_role.cluster.*.arn)
+
+  ec2_principal = "ec2.${data.aws_partition.current.dns_suffix}"
 
   # kubeconfig = templatefile("${path.module}/templates/kubeconfig.tpl", {
   #   kubeconfig_name                   = "eks_${var.cluster_name}"

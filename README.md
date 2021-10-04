@@ -108,13 +108,11 @@ module "cloud-platform" {
 | <a name="input_kubeconfig_aws_authenticator_command_args"></a> [kubeconfig_aws_authenticator_command_args](#input_kubeconfig_aws_authenticator_command_args) | Default arguments passed to the authenticator command. Defaults to [token -i $cluster_name]. | `list(string)` | `[]` | no |
 | <a name="input_kubeconfig_aws_authenticator_additional_args"></a> [kubeconfig_aws_authenticator_additional_args](#input_kubeconfig_aws_authenticator_additional_args) | Any additional arguments to pass to the authenticator such as the role to assume. e.g. [\"-r\", \"MyEksRole\"]. | `list(string)` | `[]` | no |
 | <a name="input_kubeconfig_aws_authenticator_env_variables"></a> [kubeconfig_aws_authenticator_env_variables](#input_kubeconfig_aws_authenticator_env_variables) | Environment variables that should be used when executing the authenticator. e.g. { AWS_PROFILE = \"eks\"}. | `map(string)` | `{}` | no |
-| <a name="input_iam_path"></a> [iam_path](#input_iam_path) | If provided, all IAM roles will be created on this path. | `string` | `"/"` | no |
 | <a name="input_tags"></a> [tags](#input_tags) | A map of tags to add to all resources. | `map(string)` | `{}` | no |
 | <a name="input_cluster_tags"></a> [cluster_tags](#input_cluster_tags) | A map of tags to add to just the eks resource. | `map(string)` | `{}` | no |
 | <a name="input_cluster_create_timeout"></a> [cluster_create_timeout](#input_cluster_create_timeout) | Timeout value when creating the EKS cluster. | `string` | `30m` | no |
 | <a name="input_cluster_delete_timeout"></a> [cluster_delete_timeout](#input_cluster_delete_timeout) | Timeout value when deleting the EKS cluster. | `string` | `15m` | no |
 | <a name="input_cluster_update_timeout"></a> [cluster_update_timeout](#input_cluster_update_timeout) | Timeout value when updating the EKS cluster. | `string` | `60m` | no |
-| <a name="input_permissions_boundary"></a> [permissions_boundary](#input_permissions_boundary) | If provided, all IAM roles will be created with this permissions boundary attached. | `string` | `""` | no |
 | <a name="input_worker_groups"></a> [worker_groups](#input_worker_groups) | A list of maps defining worker group configurations to be defined using AWS Launch Configurations. | `list(any)` | `[]` | no |
 | <a name="input_workers_group_defaults"></a> [workers_group_defaults](#input_workers_group_defaults) | Override default values for target groups. | `any` | `[]` | no |
 

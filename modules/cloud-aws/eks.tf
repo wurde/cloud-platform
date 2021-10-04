@@ -6,52 +6,58 @@
 # instances and three etcd instances that run across three
 # Availability Zones within a Region.
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
-# resource "aws_eks_cluster" "main" {
-#   name                      = var.cluster_name
-#   enabled_cluster_log_types = var.cluster_enabled_log_types
-#   role_arn                  = local.cluster_iam_role_arn
-#   version                   = var.cluster_version
+resource "aws_eks_cluster" "main" {
+  name                      = var.cluster_name
+  enabled_cluster_log_types = var.cluster_enabled_log_types
+  role_arn                  = local.cluster_iam_role_arn
+  version                   = var.cluster_version
 
-#   vpc_config {
-#     security_group_ids      = compact([local.cluster_security_group_id])
-#     subnet_ids              = var.subnets
-#     endpoint_private_access = var.cluster_endpoint_private_access
-#     endpoint_public_access  = var.cluster_endpoint_public_access
-#     public_access_cidrs     = var.cluster_endpoint_public_access_cidrs
-#   }
+  vpc_config {
+    security_group_ids      = compact([local.cluster_security_group_id])
 
-#   kubernetes_network_config {
-#     service_ipv4_cidr = var.cluster_service_ipv4_cidr
-#   }
+    # List of subnet IDs. Must be in at least two different
+    # availability zones. Amazon EKS creates cross-account
+    # elastic network interfaces in these subnets to allow
+    # communication between your worker nodes and the
+    # Kubernetes control plane.
+    subnet_ids              = module.vpc.private_subnets
+    endpoint_private_access = var.cluster_endpoint_private_access
+    endpoint_public_access  = var.cluster_endpoint_public_access
+    public_access_cidrs     = var.cluster_endpoint_public_access_cidrs
+  }
 
-#   dynamic "encryption_config" {
-#     for_each = toset(var.cluster_encryption_config)
+  kubernetes_network_config {
+    service_ipv4_cidr = var.cluster_service_ipv4_cidr
+  }
 
-#     content {
-#       provider {
-#         key_arn = encryption_config.value["provider_key_arn"]
-#       }
-#       resources = encryption_config.value["resources"]
-#     }
-#   }
+  dynamic "encryption_config" {
+    for_each = toset(var.cluster_encryption_config)
 
-#   tags = merge(
-#     var.tags,
-#     var.cluster_tags,
-#   )
+    content {
+      provider {
+        key_arn = encryption_config.value["provider_key_arn"]
+      }
+      resources = encryption_config.value["resources"]
+    }
+  }
 
-#   timeouts {
-#     create = var.cluster_create_timeout
-#     delete = var.cluster_delete_timeout
-#     update = var.cluster_update_timeout
-#   }
+  tags = merge(
+    var.tags,
+    var.cluster_tags,
+  )
 
-#   depends_on = [
-#     aws_security_group_rule.cluster_egress_internet,
-#     aws_security_group_rule.cluster_https_worker_ingress,
-#     aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
-#     aws_iam_role_policy_attachment.cluster_AmazonEKSServicePolicy,
-#     aws_iam_role_policy_attachment.cluster_AmazonEKSVPCResourceControllerPolicy,
-#     aws_cloudwatch_log_group.this
-#   ]
-# }
+  timeouts {
+    create = var.cluster_create_timeout
+    delete = var.cluster_delete_timeout
+    update = var.cluster_update_timeout
+  }
+
+  depends_on = [
+    aws_security_group_rule.cluster_egress_internet,
+    aws_security_group_rule.cluster_https_worker_ingress,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSVPCResourceControllerPolicy,
+    aws_cloudwatch_log_group.this
+  ]
+}

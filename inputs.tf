@@ -10,9 +10,9 @@ variable "cloud" {
 }
 
 variable "region" {
-  description = "AWS or GCP region. Default is AWS us-west-2."
+  description = "AWS or GCP region. Default is AWS us-east-2."
   type        = string
-  default     = "us-west-2"
+  default     = "us-east-2"
 }
 
 variable "cluster_version" {

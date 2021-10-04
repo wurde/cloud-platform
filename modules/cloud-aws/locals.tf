@@ -8,6 +8,7 @@ locals {
   vpc_name = "vpc-eks-${random_string.suffix.result}"
   vpc_cidr = "10.0.0.0/16"
 
+  cluster_security_group_id = join("", aws_security_group.cluster.*.id)
   workers_iam_role_name = "iam-eks-workers-${random_string.suffix.result}"
   cluster_iam_role_name = "iam-eks-cluster-${random_string.suffix.result}"
   cluster_iam_role_arn  = join("", aws_iam_role.cluster.*.arn)

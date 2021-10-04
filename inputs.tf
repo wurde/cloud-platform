@@ -103,9 +103,14 @@ variable "worker_groups" {
   default     = []
 }
 variable "workers_group_defaults" {
-  description = "Override default values for target groups."
+  description = "Override default values for target groups. See workers_group_defaults_defaults in local.tf for valid keys."
   type        = any
   default     = {}
+}
+variable "worker_groups_launch_template" {
+  description = "A list of maps defining worker group configurations to be defined using AWS Launch Templates."
+  type        = any
+  default     = []
 }
 
 variable "node_groups_defaults" {

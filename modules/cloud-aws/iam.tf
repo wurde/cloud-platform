@@ -64,22 +64,22 @@ data "aws_iam_policy_document" "workers_assume_role_policy" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
-# resource "aws_iam_instance_profile" "workers" {
-#   count = local.worker_group_launch_configuration_count
+resource "aws_iam_instance_profile" "workers" {
+  count = local.worker_group_launch_configuration_count
 
-#   name_prefix = local.cluster_name
-#   role = lookup(
-#     var.worker_groups[count.index],
-#     "iam_role_id",
-#     local.default_iam_role_id,
-#   )
+  name_prefix = local.cluster_name
+  role = lookup(
+    var.worker_groups[count.index],
+    "iam_role_id",
+    local.default_iam_role_id,
+  )
 
-#   tags = var.tags
+  tags = var.tags
 
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
 # # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
 # resource "aws_iam_instance_profile" "workers_launch_template" {

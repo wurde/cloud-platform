@@ -114,6 +114,7 @@ module "cloud-platform" {
 | <a name="input_cluster_update_timeout"></a> [cluster_update_timeout](#input_cluster_update_timeout) | Timeout value when updating the EKS cluster. | `string` | `60m` | no |
 | <a name="input_worker_groups"></a> [worker_groups](#input_worker_groups) | A list of maps defining worker group configurations to be defined using AWS Launch Configurations. | `list(any)` | `[]` | no |
 | <a name="input_workers_group_defaults"></a> [workers_group_defaults](#input_workers_group_defaults) | Override default values for target groups. | `any` | `[]` | no |
+| <a name="input_worker_groups_launch_template"></a> [worker_groups_launch_template](#input_worker_groups_launch_template) | A list of maps defining worker group configurations to be defined using AWS Launch Templates. | `any` | `[]` | no |
 
 ## Outputs
 

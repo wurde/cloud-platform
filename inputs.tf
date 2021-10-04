@@ -33,6 +33,16 @@ variable "wait_for_cluster_timeout" {
   default     = 300
 }
 
+variable "cluster_enabled_log_types" {
+  description = "A list of the desired control plane logging to enable. For more information, see Amazon EKS Control Plane Logging documentation (https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html)"
+  type        = list(string)
+  default     = []
+}
+variable "cluster_log_kms_key_id" {
+  description = "If a KMS Key ARN is set, this key will be used to encrypt the corresponding log group. Please be sure that the KMS Key has an appropriate key policy (https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html)"
+  type        = string
+  default     = ""
+}
 variable "cluster_log_retention_in_days" {
   description = "Number of days to retain log events. Default retention - 90 days."
   type        = number
@@ -71,6 +81,75 @@ variable "kubeconfig_aws_authenticator_additional_args" {
 }
 variable "kubeconfig_aws_authenticator_env_variables" {
   description = "Environment variables that should be used when executing the authenticator. e.g. { AWS_PROFILE = \"eks\"}."
+  type        = map(string)
+  default     = {}
+}
+
+variable "cluster_create_timeout" {
+  description = "Timeout value when creating the EKS cluster."
+  type        = string
+  default     = "30m"
+}
+
+variable "cluster_delete_timeout" {
+  description = "Timeout value when deleting the EKS cluster."
+  type        = string
+  default     = "15m"
+}
+
+variable "cluster_update_timeout" {
+  description = "Timeout value when updating the EKS cluster."
+  type        = string
+  default     = "60m"
+}
+
+variable "permissions_boundary" {
+  description = "If provided, all IAM roles will be created with this permissions boundary attached."
+  type        = string
+  default     = null
+}
+
+variable "iam_path" {
+  description = "If provided, all IAM roles will be created on this path."
+  type        = string
+  default     = "/"
+}
+
+variable "workers_role_name" {
+  description = "User defined workers role name."
+  type        = string
+  default     = ""
+}
+variable "worker_groups" {
+  description = "A list of maps defining worker group configurations to be defined using AWS Launch Configurations."
+  type        = list(any)
+  default     = []
+}
+variable "workers_group_defaults" {
+  description = "Override default values for target groups."
+  type        = any
+  default     = {}
+}
+
+variable "node_groups_defaults" {
+  description = "Map of values to be applied to all node groups."
+  type        = any
+  default     = {}
+}
+
+variable "node_groups" {
+  description = "Map of map of node groups to create."
+  type        = any
+  default     = {}
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources. Tags added to launch configuration or templates override these values for ASG Tags only."
+  type        = map(string)
+  default     = {}
+}
+variable "cluster_tags" {
+  description = "A map of tags to add to just the eks resource."
   type        = map(string)
   default     = {}
 }

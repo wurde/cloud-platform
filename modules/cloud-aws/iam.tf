@@ -2,166 +2,97 @@
 # https://aws.amazon.com/iam
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
-# resource "aws_iam_role" "cluster" {
-#   name_prefix           = var.cluster_iam_role_name != "" ? null : var.cluster_name
-#   name                  = var.cluster_iam_role_name != "" ? var.cluster_iam_role_name : null
-#   assume_role_policy    = data.aws_iam_policy_document.cluster_assume_role_policy.json
-#   permissions_boundary  = var.permissions_boundary
-#   path                  = var.iam_path
-#   force_detach_policies = true
+# TODO aws_iam_policy_document
+resource "aws_iam_role" "cluster" {
+  # Friendly name of the role.
+  name = locals.cluster_iam_role_name
 
-#   tags = var.tags
-# }
+  # (Required) Policy that grants an entity permission to assume the role.
+  assume_role_policy = data.aws_iam_policy_document.cluster_assume_role_policy.json
 
-# Following IAM permissions are the minimum permissions
-# needed for your IAM user or IAM role to create an EKS
-# cluster on AWS.
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Sid": "VisualEditor0",
-#             "Effect": "Allow",
-#             "Action": [
-#                 "autoscaling:AttachInstances",
-#                 "autoscaling:CreateAutoScalingGroup",
-#                 "autoscaling:CreateLaunchConfiguration",
-#                 "autoscaling:CreateOrUpdateTags",
-#                 "autoscaling:DeleteAutoScalingGroup",
-#                 "autoscaling:DeleteLaunchConfiguration",
-#                 "autoscaling:DeleteTags",
-#                 "autoscaling:Describe*",
-#                 "autoscaling:DetachInstances",
-#                 "autoscaling:SetDesiredCapacity",
-#                 "autoscaling:UpdateAutoScalingGroup",
-#                 "autoscaling:SuspendProcesses",
-#                 "ec2:AllocateAddress",
-#                 "ec2:AssignPrivateIpAddresses",
-#                 "ec2:Associate*",
-#                 "ec2:AttachInternetGateway",
-#                 "ec2:AttachNetworkInterface",
-#                 "ec2:AuthorizeSecurityGroupEgress",
-#                 "ec2:AuthorizeSecurityGroupIngress",
-#                 "ec2:CreateDefaultSubnet",
-#                 "ec2:CreateDhcpOptions",
-#                 "ec2:CreateEgressOnlyInternetGateway",
-#                 "ec2:CreateInternetGateway",
-#                 "ec2:CreateNatGateway",
-#                 "ec2:CreateNetworkInterface",
-#                 "ec2:CreateRoute",
-#                 "ec2:CreateRouteTable",
-#                 "ec2:CreateSecurityGroup",
-#                 "ec2:CreateSubnet",
-#                 "ec2:CreateTags",
-#                 "ec2:CreateVolume",
-#                 "ec2:CreateVpc",
-#                 "ec2:CreateVpcEndpoint",
-#                 "ec2:DeleteDhcpOptions",
-#                 "ec2:DeleteEgressOnlyInternetGateway",
-#                 "ec2:DeleteInternetGateway",
-#                 "ec2:DeleteNatGateway",
-#                 "ec2:DeleteNetworkInterface",
-#                 "ec2:DeleteRoute",
-#                 "ec2:DeleteRouteTable",
-#                 "ec2:DeleteSecurityGroup",
-#                 "ec2:DeleteSubnet",
-#                 "ec2:DeleteTags",
-#                 "ec2:DeleteVolume",
-#                 "ec2:DeleteVpc",
-#                 "ec2:DeleteVpnGateway",
-#                 "ec2:Describe*",
-#                 "ec2:DetachInternetGateway",
-#                 "ec2:DetachNetworkInterface",
-#                 "ec2:DetachVolume",
-#                 "ec2:Disassociate*",
-#                 "ec2:ModifySubnetAttribute",
-#                 "ec2:ModifyVpcAttribute",
-#                 "ec2:ModifyVpcEndpoint",
-#                 "ec2:ReleaseAddress",
-#                 "ec2:RevokeSecurityGroupEgress",
-#                 "ec2:RevokeSecurityGroupIngress",
-#                 "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
-#                 "ec2:UpdateSecurityGroupRuleDescriptionsIngress",
-#                 "ec2:CreateLaunchTemplate",
-#                 "ec2:CreateLaunchTemplateVersion",
-#                 "ec2:DeleteLaunchTemplate",
-#                 "ec2:DeleteLaunchTemplateVersions",
-#                 "ec2:DescribeLaunchTemplates",
-#                 "ec2:DescribeLaunchTemplateVersions",
-#                 "ec2:GetLaunchTemplateData",
-#                 "ec2:ModifyLaunchTemplate",
-#                 "ec2:RunInstances",
-#                 "eks:CreateCluster",
-#                 "eks:DeleteCluster",
-#                 "eks:DescribeCluster",
-#                 "eks:ListClusters",
-#                 "eks:UpdateClusterConfig",
-#                 "eks:UpdateClusterVersion",
-#                 "eks:DescribeUpdate",
-#                 "eks:TagResource",
-#                 "eks:UntagResource",
-#                 "eks:ListTagsForResource",
-#                 "eks:CreateFargateProfile",
-#                 "eks:DeleteFargateProfile",
-#                 "eks:DescribeFargateProfile",
-#                 "eks:ListFargateProfiles",
-#                 "eks:CreateNodegroup",
-#                 "eks:DeleteNodegroup",
-#                 "eks:DescribeNodegroup",
-#                 "eks:ListNodegroups",
-#                 "eks:UpdateNodegroupConfig",
-#                 "eks:UpdateNodegroupVersion",
-#                 "iam:AddRoleToInstanceProfile",
-#                 "iam:AttachRolePolicy",
-#                 "iam:CreateInstanceProfile",
-#                 "iam:CreateOpenIDConnectProvider",
-#                 "iam:CreateServiceLinkedRole",
-#                 "iam:CreatePolicy",
-#                 "iam:CreatePolicyVersion",
-#                 "iam:CreateRole",
-#                 "iam:DeleteInstanceProfile",
-#                 "iam:DeleteOpenIDConnectProvider",
-#                 "iam:DeletePolicy",
-#                 "iam:DeletePolicyVersion",
-#                 "iam:DeleteRole",
-#                 "iam:DeleteRolePolicy",
-#                 "iam:DeleteServiceLinkedRole",
-#                 "iam:DetachRolePolicy",
-#                 "iam:GetInstanceProfile",
-#                 "iam:GetOpenIDConnectProvider",
-#                 "iam:GetPolicy",
-#                 "iam:GetPolicyVersion",
-#                 "iam:GetRole",
-#                 "iam:GetRolePolicy",
-#                 "iam:List*",
-#                 "iam:PassRole",
-#                 "iam:PutRolePolicy",
-#                 "iam:RemoveRoleFromInstanceProfile",
-#                 "iam:TagOpenIDConnectProvider",
-#                 "iam:TagRole",
-#                 "iam:UntagRole",
-#                 "iam:TagPolicy",
-#                 "iam:TagInstanceProfile",
-#                 "iam:UpdateAssumeRolePolicy",
-#                 // Following permissions are needed if cluster_enabled_log_types is enabled
-#                 "logs:CreateLogGroup",
-#                 "logs:DescribeLogGroups",
-#                 "logs:DeleteLogGroup",
-#                 "logs:ListTagsLogGroup",
-#                 "logs:PutRetentionPolicy",
-#                 // Following permissions for working with secrets_encryption example
-#                 "kms:CreateAlias",
-#                 "kms:CreateGrant",
-#                 "kms:CreateKey",
-#                 "kms:DeleteAlias",
-#                 "kms:DescribeKey",
-#                 "kms:GetKeyPolicy",
-#                 "kms:GetKeyRotationStatus",
-#                 "kms:ListAliases",
-#                 "kms:ListResourceTags",
-#                 "kms:ScheduleKeyDeletion"
-#             ],
-#             "Resource": "*"
-#         }
-#     ]
-# }
+  # ARN of the policy that is used to set the permissions boundary for the role.
+  permissions_boundary  = var.permissions_boundary
+
+  # Path to the role.
+  path = var.iam_path
+
+  # Whether to force detaching any policies the role has before destroying it.
+  force_detach_policies = true
+
+  # Key-value mapping of tags for the IAM role.
+  tags = var.tags
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
+resource "aws_iam_role" "workers" {
+  name_prefix           = var.workers_role_name != "" ? null : local.cluster_name
+  name                  = var.workers_role_name != "" ? var.workers_role_name : null
+  assume_role_policy    = data.aws_iam_policy_document.workers_assume_role_policy.json
+  permissions_boundary  = var.permissions_boundary
+  path                  = var.iam_path
+  force_detach_policies = true
+
+  tags = var.tags
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
+resource "aws_iam_instance_profile" "workers" {
+  count = local.worker_group_launch_configuration_count
+
+  name_prefix = local.cluster_name
+  role = lookup(
+    var.worker_groups[count.index],
+    "iam_role_id",
+    local.default_iam_role_id,
+  )
+  path = var.iam_path
+
+  tags = var.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
+resource "aws_iam_instance_profile" "workers_launch_template" {
+  count = local.worker_group_launch_template_count
+
+  name_prefix = local.cluster_name
+  role = lookup(
+    var.worker_groups_launch_template[count.index],
+    "iam_role_id",
+    local.default_iam_role_id,
+  )
+  path = var.iam_path
+
+  tags = var.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "workers_AmazonEKSWorkerNodePolicy" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.workers[0].name
+}
+
+resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
+  count = var.attach_worker_cni_policy ? 1 : 0
+
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.workers[0].name
+}
+
+resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.workers[0].name
+}
+
+resource "aws_iam_role_policy_attachment" "workers_additional_policies" {
+  count = length(var.workers_additional_policies)
+
+  role       = aws_iam_role.workers[0].name
+  policy_arn = var.workers_additional_policies[count.index]
+}

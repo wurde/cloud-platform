@@ -4,7 +4,7 @@ variable "cloud" {
   default     = "aws"
 
   validation {
-    condition = var.cloud == "aws" || var.cloud == "gcp"
+    condition     = var.cloud == "aws" || var.cloud == "gcp"
     error_message = "The cloud must be either 'aws' or 'gcp'."
   }
 }
@@ -110,6 +110,12 @@ variable "workers_group_defaults" {
 variable "worker_groups_launch_template" {
   description = "A list of maps defining worker group configurations to be defined using AWS Launch Templates."
   type        = any
+  default     = []
+}
+
+variable "workers_additional_policies" {
+  description = "Additional policies to be added to workers."
+  type        = list(string)
   default     = []
 }
 

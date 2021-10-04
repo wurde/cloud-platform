@@ -65,15 +65,7 @@ data "aws_iam_policy_document" "workers_assume_role_policy" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
 resource "aws_iam_instance_profile" "workers" {
-  count = local.worker_group_launch_configuration_count
-
-  name_prefix = local.cluster_name
-  role = lookup(
-    var.worker_groups[count.index],
-    "iam_role_id",
-    local.default_iam_role_id,
-  )
-
+  role = local.default_iam_role_id
   tags = var.tags
 
   lifecycle {
@@ -81,45 +73,38 @@ resource "aws_iam_instance_profile" "workers" {
   }
 }
 
-# # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
-# resource "aws_iam_instance_profile" "workers_launch_template" {
-#   count = local.worker_group_launch_template_count
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
+resource "aws_iam_instance_profile" "workers_launch_template" {
+  role = local.default_iam_role_id
+  tags = var.tags
 
-#   name_prefix = local.cluster_name
-#   role = lookup(
-#     var.worker_groups_launch_template[count.index],
-#     "iam_role_id",
-#     local.default_iam_role_id,
-#   )
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
-#   tags = var.tags
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
+resource "aws_iam_role_policy_attachment" "workers_AmazonEKSWorkerNodePolicy" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKSWorkerNodePolicy"
+  role       = local.workers_iam_role_name
+}
 
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
+resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKS_CNI_Policy"
+  role       = local.workers_iam_role_name
+}
 
-# resource "aws_iam_role_policy_attachment" "workers_AmazonEKSWorkerNodePolicy" {
-#   policy_arn = "${local.policy_arn_prefix}/AmazonEKSWorkerNodePolicy"
-#   role       = aws_iam_role.workers[0].name
-# }
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
+resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEC2ContainerRegistryReadOnly"
+  role       = local.workers_iam_role_name
+}
 
-# resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
-#   count = var.attach_worker_cni_policy ? 1 : 0
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
+resource "aws_iam_role_policy_attachment" "workers_additional_policies" {
+  count = length(var.workers_additional_policies)
 
-#   policy_arn = "${local.policy_arn_prefix}/AmazonEKS_CNI_Policy"
-#   role       = aws_iam_role.workers[0].name
-# }
-
-# resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
-#   policy_arn = "${local.policy_arn_prefix}/AmazonEC2ContainerRegistryReadOnly"
-#   role       = aws_iam_role.workers[0].name
-# }
-
-# resource "aws_iam_role_policy_attachment" "workers_additional_policies" {
-#   count = length(var.workers_additional_policies)
-
-#   role       = aws_iam_role.workers[0].name
-#   policy_arn = var.workers_additional_policies[count.index]
-# }
-
+  role       = local.workers_iam_role_name
+  policy_arn = var.workers_additional_policies[count.index]
+}

@@ -4,6 +4,10 @@ module "cloud_aws" {
 
   cluster_version = var.cluster_version
 
+  worker_groups                 = var.worker_groups
+  workers_group_defaults        = var.workers_group_defaults
+  worker_groups_launch_template = var.worker_groups_launch_template
+
   region = var.region
   tags   = var.tags
 }

@@ -22,7 +22,8 @@ locals {
   # https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html
   worker_ami_name_filter = "amazon-eks-node-${coalesce(var.cluster_version, "cluster_version")}-v*"
 
-  ec2_principal = "ec2.${data.aws_partition.current.dns_suffix}"
+  ec2_principal     = "ec2.${data.aws_partition.current.dns_suffix}"
+  policy_arn_prefix = "arn:${data.aws_partition.current.partition}:iam::aws:policy"
 
   workers_group_defaults_defaults = {
     name                              = "count.index"               # Name of the worker group. Literal count.index will never be used but if name is not set, the count.index interpolation will be used.

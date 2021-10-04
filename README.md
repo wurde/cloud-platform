@@ -72,11 +72,27 @@ Local terraform configuration:
 module "cloud-platform" {
   source = "git::github.com/wurde/cloud-platform"
 
-  cloud = "aws"
+  cloud  = "aws"
+  region = "us-west-2"
 
   workers_group_defaults = {
     root_volume_type = "gp2"
   }
+
+  worker_groups = [
+    {
+      name                 = "worker-group-1"
+      instance_type        = "t2.small"
+      additional_userdata  = "echo foo bar"
+      asg_desired_capacity = 2
+    },
+    {
+      name                 = "worker-group-2"
+      instance_type        = "t2.medium"
+      additional_userdata  = "echo foo bar"
+      asg_desired_capacity = 1
+    },
+  ]
 
   tags {
     Environment = "production"

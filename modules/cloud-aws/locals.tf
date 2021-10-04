@@ -1,11 +1,12 @@
 locals {
   cluster_name = "eks-cluster-${random_string.suffix.result}"
 
-  # cluster_id          = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].id, [""])[0]
-  # cluster_auth_base64 = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].certificate_authority[0].data, [""])[0]
-  # cluster_endpoint    = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].endpoint, [""])[0]
+  # cluster_id          = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].id, [""])[0]
+  # cluster_auth_base64 = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].certificate_authority[0].data, [""])[0]
+  # cluster_endpoint    = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].endpoint, [""])[0]
 
   vpc_name = "vpc-eks-${random_string.suffix.result}"
+  vpc_cidr = "10.0.0.0/16"
 
   workers_iam_role_name = "iam-eks-workers-${random_string.suffix.result}"
   cluster_iam_role_name = "iam-eks-cluster-${random_string.suffix.result}"

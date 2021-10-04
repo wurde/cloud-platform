@@ -1,7 +1,12 @@
 # Amazon Elastic Kubernetes Service (EKS)
 # https://aws.amazon.com/eks
 
-# resource "aws_eks_cluster" "this" {
+# A managed service that you can use to run Kubernetes on AWS
+# The control plane consists of at least two API server
+# instances and three etcd instances that run across three
+# Availability Zones within a Region.
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
+# resource "aws_eks_cluster" "main" {
 #   name                      = var.cluster_name
 #   enabled_cluster_log_types = var.cluster_enabled_log_types
 #   role_arn                  = local.cluster_iam_role_arn

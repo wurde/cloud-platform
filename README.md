@@ -94,6 +94,8 @@ module "cloud-platform" {
     },
   ]
 
+  cluster_enabled_log_types = ["api", "audit"]
+
   tags {
     Environment = "production"
   }

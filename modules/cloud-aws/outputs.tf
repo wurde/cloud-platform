@@ -11,7 +11,7 @@
 
 # output "cluster_version" {
 #   description = "The Kubernetes server version for the EKS cluster."
-#   value       = element(concat(aws_eks_cluster.this[*].version, [""]), 0)
+#   value       = element(concat(aws_eks_cluster.main[*].version, [""]), 0)
 # }
 
 output "cluster_iam_role_name" {

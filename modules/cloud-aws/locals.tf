@@ -11,6 +11,8 @@ locals {
   cluster_iam_role_name = "iam-eks-cluster-${random_string.suffix.result}"
   cluster_iam_role_arn  = join("", aws_iam_role.cluster.*.arn)
 
+  default_iam_role_id = concat(aws_iam_role.workers.*.id, [""])[0]
+
   worker_group_launch_configuration_count = length(var.worker_groups)
   worker_group_launch_template_count      = length(var.worker_groups_launch_template)
 

@@ -5,7 +5,7 @@
 # TODO aws_iam_policy_document
 resource "aws_iam_role" "cluster" {
   # Friendly name of the role.
-  name = locals.cluster_iam_role_name
+  name = local.cluster_iam_role_name
 
   # (Required) Policy that grants an entity permission to assume the role.
   assume_role_policy = data.aws_iam_policy_document.cluster_assume_role_policy.json
@@ -20,7 +20,7 @@ resource "aws_iam_role" "cluster" {
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "workers" {
   # Friendly name of the role.
-  name = locals.workers_iam_role_name
+  name = local.workers_iam_role_name
 
   # (Required) Policy that grants an entity permission to assume the role.
   assume_role_policy = data.aws_iam_policy_document.workers_assume_role_policy.json

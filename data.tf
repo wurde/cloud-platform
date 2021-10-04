@@ -4,9 +4,6 @@
 #
 # https://www.terraform.io/docs/language/data-sources/index.html
 
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition
-data "aws_partition" "current" {}
-
 # data "http" "wait_for_cluster" {
 #   count = var.cloud == "aws" ? 1 : 0
 

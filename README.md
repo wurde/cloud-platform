@@ -119,8 +119,16 @@ module "cloud-platform" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_cluster_id"></a> [cluster_id](#output_cluster_id) | The ID of the EKS cluster. Will block on cluster creation until the cluster is really ready. |
+| <a name="output_cluster_id"></a> [cluster_id](#output_cluster_id) | The ID of the EKS cluster. |
+| <a name="output_cluster_arn"></a> [cluster_arn](#output_cluster_arn) | The Amazon Resource Name (ARN) of the cluster. |
 | <a name="output_cluster_version"></a> [cluster_version](#output_cluster_version) | The Kubernetes server version for the EKS cluster. |
+| <a name="output_cluster_iam_role_name"></a> [cluster_iam_role_name](#output_cluster_iam_role_name) | IAM role name of the EKS cluster. |
+| <a name="output_cluster_iam_role_arn"></a> [cluster_iam_role_arn](#output_cluster_iam_role_arn) | IAM role ARN of the EKS cluster. |
+| <a name="output_worker_iam_instance_profile_arns"></a> [worker_iam_instance_profile_arns](#output_worker_iam_instance_profile_arns) | Default IAM instance profile ARN for EKS worker groups. |
+| <a name="output_worker_iam_instance_profile_names"></a> [worker_iam_instance_profile_names](#output_worker_iam_instance_profile_names) | Default IAM instance profile name for EKS worker groups. |
+| <a name="output_worker_iam_role_name"></a> [worker_iam_role_name](#output_worker_iam_role_name) | Default IAM role name for EKS worker groups. |
+| <a name="output_worker_iam_role_arn"></a> [worker_iam_role_arn](#output_worker_iam_role_arn) | Default IAM role ARN for EKS worker groups. |
+| <a name="output_kubeconfig"></a> [kubeconfig](#output_kubeconfig) | kubectl config file contents for this EKS cluster. |
 
 ## License
 

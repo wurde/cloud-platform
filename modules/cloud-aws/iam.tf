@@ -2,7 +2,6 @@
 # https://aws.amazon.com/iam
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
-# TODO aws_iam_policy_document
 resource "aws_iam_role" "cluster" {
   # Friendly name of the role.
   name = local.cluster_iam_role_name
@@ -15,6 +14,22 @@ resource "aws_iam_role" "cluster" {
 
   # Key-value mapping of tags for the IAM role.
   tags = var.tags
+}
+# Generates an IAM policy document in JSON format.
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
+data "aws_iam_policy_document" "cluster_assume_role_policy" {
+  statement {
+    sid = "EKSClusterAssumeRole"
+
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["eks.amazonaws.com"]
+    }
+  }
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
@@ -31,8 +46,24 @@ resource "aws_iam_role" "workers" {
   # Key-value mapping of tags for the IAM role.
   tags = var.tags
 }
+# Generates an IAM policy document in JSON format.
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
+data "aws_iam_policy_document" "workers_assume_role_policy" {
+  statement {
+    sid = "EKSWorkerAssumeRole"
 
-# # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = [local.ec2_principal]
+    }
+  }
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
 # resource "aws_iam_instance_profile" "workers" {
 #   count = local.worker_group_launch_configuration_count
 
@@ -92,32 +123,3 @@ resource "aws_iam_role" "workers" {
 #   policy_arn = var.workers_additional_policies[count.index]
 # }
 
-data "aws_iam_policy_document" "cluster_assume_role_policy" {
-  statement {
-    sid = "EKSClusterAssumeRole"
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["eks.amazonaws.com"]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "workers_assume_role_policy" {
-  statement {
-    sid = "EKSWorkerAssumeRole"
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = [local.ec2_principal]
-    }
-  }
-}

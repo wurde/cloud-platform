@@ -5,8 +5,8 @@ locals {
   # cluster_auth_base64 = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].certificate_authority[0].data, [""])[0]
   # cluster_endpoint    = coalescelist(module.cloud_aws.aws_eks_cluster.this[*].endpoint, [""])[0]
 
-  workers_iam_role_name = local.cluster_name
-  cluster_iam_role_name = local.cluster_name
+  workers_iam_role_name = "iam-eks-workers-${random_string.suffix.result}"
+  cluster_iam_role_name = "iam-eks-cluster-${random_string.suffix.result}"
   cluster_iam_role_arn  = join("", aws_iam_role.cluster.*.arn)
 
   ec2_principal = "ec2.${data.aws_partition.current.dns_suffix}"

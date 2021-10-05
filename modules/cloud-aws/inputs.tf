@@ -103,6 +103,24 @@ variable "cluster_endpoint_private_access" {
   default     = false
 }
 
+variable "cluster_endpoint_public_access" {
+  description = "Indicates whether or not the Amazon EKS public API server endpoint is enabled. When it's set to `false` ensure to have a proper private access with `cluster_endpoint_private_access = true`."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "cluster_service_ipv4_cidr" {
+  description = "Service ipv4 cidr for the kubernetes cluster"
+  type        = string
+  default     = null
+}
+
 variable "cluster_egress_cidrs" {
   description = "List of CIDR blocks that are permitted for cluster egress traffic."
   type        = list(string)
@@ -165,6 +183,15 @@ variable "node_groups" {
   description = "Map of map of node groups to create."
   type        = any
   default     = {}
+}
+
+variable "cluster_encryption_config" {
+  description = "Configuration block with encryption configuration for the cluster."
+  type = list(object({
+    provider_key_arn = string
+    resources        = list(string)
+  }))
+  default = []
 }
 
 variable "tags" {

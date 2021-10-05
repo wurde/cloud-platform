@@ -53,6 +53,18 @@ resource "aws_iam_role_policy_attachment" "cluster_elb_sl_role_creation" {
   policy_arn = aws_iam_policy.cluster_elb_sl_role_creation.arn
   role       = local.cluster_iam_role_name
 }
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKSClusterPolicy"
+  role       = local.cluster_iam_role_name
+}
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSServicePolicy" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKSServicePolicy"
+  role       = local.cluster_iam_role_name
+}
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSVPCResourceControllerPolicy" {
+  policy_arn = "${local.policy_arn_prefix}/AmazonEKSVPCResourceController"
+  role       = local.cluster_iam_role_name
+}
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "workers" {

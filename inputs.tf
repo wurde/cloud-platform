@@ -85,6 +85,12 @@ variable "cluster_create_endpoint_private_access_sg_rule" {
   default     = false
 }
 
+variable "cluster_endpoint_private_access_cidrs" {
+  description = "List of CIDR blocks which can access the Amazon EKS private API server endpoint. To use this `cluster_endpoint_private_access` and `cluster_create_endpoint_private_access_sg_rule` must be set to `true`."
+  type        = list(string)
+  default     = null
+}
+
 variable "cluster_endpoint_private_access_sg" {
   description = "List of security group IDs which can access the Amazon EKS private API server endpoint. To use this `cluster_endpoint_private_access` and `cluster_create_endpoint_private_access_sg_rule` must be set to `true`."
   type        = list(string)

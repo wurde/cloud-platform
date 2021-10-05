@@ -38,14 +38,14 @@ module "vpc" {
 # https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
 resource "aws_security_group" "cluster" {
-  name_prefix = var.cluster_name
+  name_prefix = local.cluster_name
   description = "EKS cluster security group."
   vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     var.tags,
     {
-      "Name" = "${var.cluster_name}-eks_cluster_sg"
+      "Name" = "${local.cluster_name}-eks_cluster_sg"
     },
   )
 }

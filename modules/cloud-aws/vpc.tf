@@ -32,8 +32,26 @@ module "vpc" {
   }
 }
 
+# Security groups for your VPC
+# A security group acts as a virtual firewall for your
+# instance to control inbound and outbound traffic.
+# https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+resource "aws_security_group" "cluster" {
+  name_prefix = var.cluster_name
+  description = "EKS cluster security group."
+  vpc_id      = module.vpc.vpc_id
+
+  tags = merge(
+    var.tags,
+    {
+      "Name" = "${var.cluster_name}-eks_cluster_sg"
+    },
+  )
+}
+
 # resource "aws_security_group_rule" "cluster_private_access_sg_source" {
-#   count = var.create_eks && var.cluster_create_endpoint_private_access_sg_rule && var.cluster_endpoint_private_access && var.cluster_endpoint_private_access_sg != null ? length(var.cluster_endpoint_private_access_sg) : 0
+#   count = var.cluster_create_endpoint_private_access_sg_rule && var.cluster_endpoint_private_access && var.cluster_endpoint_private_access_sg != null ? length(var.cluster_endpoint_private_access_sg) : 0
 
 #   description              = "Allow private K8S API ingress from custom Security Groups source."
 #   type                     = "ingress"

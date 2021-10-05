@@ -1,10 +1,10 @@
 locals {
   cluster_name = "eks-cluster-${random_string.suffix.result}"
 
-  # cluster_id          = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].id, [""])[0]
-  # cluster_arn         = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].arn, [""])[0]
-  # cluster_auth_base64 = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].certificate_authority[0].data, [""])[0]
-  # cluster_endpoint    = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].endpoint, [""])[0]
+  cluster_id          = coalescelist(aws_eks_cluster.main[*].id, [""])[0]
+  cluster_arn         = coalescelist(aws_eks_cluster.main[*].arn, [""])[0]
+  cluster_auth_base64 = coalescelist(aws_eks_cluster.main[*].certificate_authority[0].data, [""])[0]
+  cluster_endpoint    = coalescelist(aws_eks_cluster.main[*].endpoint, [""])[0]
 
   vpc_name = "vpc-eks-${random_string.suffix.result}"
   vpc_cidr = "10.0.0.0/16"
@@ -112,15 +112,15 @@ locals {
     capacity_rebalance                       = false                                                # Enable capacity rebalance
   }
 
-  # kubeconfig = templatefile("${path.module}/templates/kubeconfig.tpl", {
-  #   kubeconfig_name                   = "eks_${var.cluster_name}"
-  #   endpoint                          = local.cluster_endpoint
-  #   cluster_auth_base64               = local.cluster_auth_base64
-  #   aws_authenticator_command         = var.kubeconfig_aws_authenticator_command
-  #   aws_authenticator_command_args    = coalescelist(var.kubeconfig_aws_authenticator_command_args, ["token", "-i", local.cluster_name])
-  #   aws_authenticator_additional_args = var.kubeconfig_aws_authenticator_additional_args
-  #   aws_authenticator_env_variables   = var.kubeconfig_aws_authenticator_env_variables
-  # })
+  kubeconfig = templatefile("${path.module}/../../templates/kubeconfig.tpl", {
+    kubeconfig_name                   = "eks_${local.cluster_name}"
+    endpoint                          = local.cluster_endpoint
+    cluster_auth_base64               = local.cluster_auth_base64
+    aws_authenticator_command         = var.kubeconfig_aws_authenticator_command
+    aws_authenticator_command_args    = coalescelist(var.kubeconfig_aws_authenticator_command_args, ["token", "-i", local.cluster_name])
+    aws_authenticator_additional_args = var.kubeconfig_aws_authenticator_additional_args
+    aws_authenticator_env_variables   = var.kubeconfig_aws_authenticator_env_variables
+  })
 }
 
 resource "random_string" "suffix" {

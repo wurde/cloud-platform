@@ -7,7 +7,7 @@
 # Availability Zones within a Region.
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
 resource "aws_eks_cluster" "main" {
-  name                      = var.cluster_name
+  name                      = local.cluster_name
   enabled_cluster_log_types = var.cluster_enabled_log_types
   role_arn                  = local.cluster_iam_role_arn
   version                   = var.cluster_version

@@ -2,6 +2,7 @@ locals {
   cluster_name = "eks-cluster-${random_string.suffix.result}"
 
   # cluster_id          = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].id, [""])[0]
+  # cluster_arn         = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].arn, [""])[0]
   # cluster_auth_base64 = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].certificate_authority[0].data, [""])[0]
   # cluster_endpoint    = coalescelist(module.cloud_aws.aws_eks_cluster.main[*].endpoint, [""])[0]
 

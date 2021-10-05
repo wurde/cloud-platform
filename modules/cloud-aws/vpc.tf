@@ -133,6 +133,9 @@ resource "aws_security_group" "workers" {
     },
   )
 }
+# To pull container images, Nodes require access to Amazon S3,
+# Amazon ECR APIs, and any other container registries that
+# they need to pull images from, such as DockerHub.
 resource "aws_security_group_rule" "workers_egress_internet" {
   description = "Allow nodes all egress to the Internet."
 

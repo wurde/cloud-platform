@@ -31,6 +31,28 @@ data "aws_iam_policy_document" "cluster_assume_role_policy" {
     }
   }
 }
+data "aws_iam_policy_document" "cluster_elb_sl_role_creation" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:DescribeAccountAttributes",
+      "ec2:DescribeInternetGateways",
+      "ec2:DescribeAddresses"
+    ]
+    resources = ["*"]
+  }
+}
+resource "aws_iam_policy" "cluster_elb_sl_role_creation" {
+  name_prefix = "${local.cluster_name}-elb-sl-role-creation"
+  description = "Permissions for EKS to create AWSServiceRoleForElasticLoadBalancing service-linked role"
+  policy      = data.aws_iam_policy_document.cluster_elb_sl_role_creation[0].json
+
+  tags = var.tags
+}
+resource "aws_iam_role_policy_attachment" "cluster_elb_sl_role_creation" {
+  policy_arn = aws_iam_policy.cluster_elb_sl_role_creation[0].arn
+  role       = local.cluster_iam_role_name
+}
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "workers" {

@@ -49,63 +49,75 @@ resource "aws_security_group" "cluster" {
     },
   )
 }
+resource "aws_security_group_rule" "cluster_egress_internet" {
+  description = "Allow cluster egress access to the Internet."
 
-# resource "aws_security_group_rule" "cluster_private_access_sg_source" {
-#   count = var.cluster_create_endpoint_private_access_sg_rule && var.cluster_endpoint_private_access && var.cluster_endpoint_private_access_sg != null ? length(var.cluster_endpoint_private_access_sg) : 0
+  security_group_id = local.cluster_security_group_id
+  cidr_blocks       = var.cluster_egress_cidrs
 
-#   description              = "Allow private K8S API ingress from custom Security Groups source."
-#   type                     = "ingress"
-#   from_port                = 443
-#   to_port                  = 443
-#   protocol                 = "tcp"
-#   source_security_group_id = var.cluster_endpoint_private_access_sg[count.index]
+  from_port = 0
+  to_port   = 0
+  protocol  = "-1"
+  type      = "egress"
+}
+resource "aws_security_group_rule" "cluster_private_access_cidrs_source" {
+  for_each = var.cluster_create_endpoint_private_access_sg_rule && var.cluster_endpoint_private_access && var.cluster_endpoint_private_access_cidrs != null ? toset(var.cluster_endpoint_private_access_cidrs) : []
 
-#   security_group_id = aws_eks_cluster.main[0].vpc_config[0].cluster_security_group_id
-# }
+  description = "Allow private K8S API ingress from custom CIDR source."
 
-# resource "aws_security_group" "worker_group_mgmt_one" {
-#   name_prefix = "worker_group_mgmt_one"
-#   vpc_id      = module.vpc.vpc_id
+  security_group_id = local.cluster_security_group_id
+  cidr_blocks       = [each.value]
 
-#   ingress {
-#     from_port = 22
-#     to_port   = 22
-#     protocol  = "tcp"
+  from_port = 443
+  to_port   = 443
+  protocol  = "tcp"
+  type      = "ingress"
+}
+resource "aws_security_group_rule" "cluster_private_access_sg_source" {
+  count = var.cluster_create_endpoint_private_access_sg_rule && var.cluster_endpoint_private_access && var.cluster_endpoint_private_access_sg != null ? length(var.cluster_endpoint_private_access_sg) : 0
 
-#     cidr_blocks = [
-#       "10.0.0.0/8",
-#     ]
-#   }
-# }
+  description = "Allow private K8S API ingress from custom Security Groups source."
 
-# resource "aws_security_group" "worker_group_mgmt_two" {
-#   name_prefix = "worker_group_mgmt_two"
-#   vpc_id      = module.vpc.vpc_id
+  security_group_id        = local.cluster_security_group_id
+  source_security_group_id = var.cluster_endpoint_private_access_sg[count.index]
 
-#   ingress {
-#     from_port = 22
-#     to_port   = 22
-#     protocol  = "tcp"
+  from_port = 443
+  to_port   = 443
+  protocol  = "tcp"
+  type      = "ingress"
+}
 
-#     cidr_blocks = [
-#       "192.168.0.0/16",
-#     ]
-#   }
-# }
+resource "aws_security_group" "workers" {
+  name_prefix = local.cluster_name
+  description = "Security group for all nodes in the cluster."
+  vpc_id      = module.vpc.vpc_id
+  tags = merge(
+    var.tags,
+    {
+      "Name"                                        = "${local.cluster_name}-eks_worker_sg"
+      "kubernetes.io/cluster/${local.cluster_name}" = "owned"
+    },
+  )
+}
+resource "aws_security_group_rule" "workers_egress_internet" {
+  description = "Allow nodes all egress to the Internet."
 
-# resource "aws_security_group" "all_worker_mgmt" {
-#   name_prefix = "all_worker_management"
-#   vpc_id      = module.vpc.vpc_id
+  security_group_id = local.worker_security_group_id
+  cidr_blocks       = var.workers_egress_cidrs
 
-#   ingress {
-#     from_port = 22
-#     to_port   = 22
-#     protocol  = "tcp"
+  from_port = 0
+  to_port   = 0
+  protocol  = "-1"
+  type      = "egress"
+}
+resource "aws_security_group_rule" "cluster_https_worker_ingress" {
+  description = "Allow pods to communicate with the EKS cluster API."
 
-#     cidr_blocks = [
-#       "10.0.0.0/8",
-#       "172.16.0.0/12",
-#       "192.168.0.0/16",
-#     ]
-#   }
-# }
+  security_group_id        = local.cluster_security_group_id
+  source_security_group_id = local.worker_security_group_id
+
+  from_port = 443
+  to_port   = 443
+  protocol  = "tcp"
+  type      = "ingress"
+}

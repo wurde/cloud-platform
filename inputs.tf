@@ -79,6 +79,36 @@ variable "kubeconfig_aws_authenticator_env_variables" {
   default     = {}
 }
 
+variable "cluster_create_endpoint_private_access_sg_rule" {
+  description = "Whether to create security group rules for the access to the Amazon EKS private API server endpoint. When is `true`, `cluster_endpoint_private_access_cidrs` must be setted."
+  type        = bool
+  default     = false
+}
+
+variable "cluster_endpoint_private_access_sg" {
+  description = "List of security group IDs which can access the Amazon EKS private API server endpoint. To use this `cluster_endpoint_private_access` and `cluster_create_endpoint_private_access_sg_rule` must be set to `true`."
+  type        = list(string)
+  default     = null
+}
+
+variable "cluster_endpoint_private_access" {
+  description = "Indicates whether or not the Amazon EKS private API server endpoint is enabled."
+  type        = bool
+  default     = false
+}
+
+variable "cluster_egress_cidrs" {
+  description = "List of CIDR blocks that are permitted for cluster egress traffic."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "workers_egress_cidrs" {
+  description = "List of CIDR blocks that are permitted for workers egress traffic."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
 variable "cluster_create_timeout" {
   description = "Timeout value when creating the EKS cluster."
   type        = string

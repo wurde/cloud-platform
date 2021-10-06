@@ -48,7 +48,7 @@ resource "aws_eks_cluster" "main" {
 
   tags = merge(
     var.tags,
-    var.cluster_tags,
+    {},
   )
 
   timeouts {

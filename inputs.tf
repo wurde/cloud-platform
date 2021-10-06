@@ -174,8 +174,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-variable "cluster_tags" {
-  description = "A map of tags to add to just the eks resource."
-  type        = map(string)
-  default     = {}
-}

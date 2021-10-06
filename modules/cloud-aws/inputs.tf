@@ -113,12 +113,6 @@ variable "worker_groups_launch_template" {
   default     = []
 }
 
-variable "workers_additional_policies" {
-  description = "Additional policies to be added to workers."
-  type        = list(string)
-  default     = []
-}
-
 variable "node_groups_defaults" {
   description = "Map of values to be applied to all node groups."
   type        = any

@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "cluster_assume_role_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["eks.amazonaws.com"]
+      identifiers = [local.eks_principal]
     }
   }
 }
@@ -133,12 +133,4 @@ resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
 resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEC2ContainerRegistryReadOnly"
   role       = local.workers_iam_role_name
-}
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
-resource "aws_iam_role_policy_attachment" "workers_additional_policies" {
-  count = length(var.workers_additional_policies)
-
-  role       = local.workers_iam_role_name
-  policy_arn = var.workers_additional_policies[count.index]
 }

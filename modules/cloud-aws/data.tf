@@ -23,17 +23,16 @@ data "aws_ami" "eks_worker" {
   owners = ["amazon"]
 }
 
-# TODO
-# data "http" "wait_for_cluster" {
-#   count = var.cloud == "aws" ? 1 : 0
+data "http" "wait_for_cluster" {
+  count = var.cloud == "aws" ? 1 : 0
 
-#   url            = format("%s/healthz", local.cluster_endpoint)
-#   ca_certificate = base64decode(local.cluster_auth_base64)
-#   timeout        = "300"
+  url            = format("%s/healthz", local.cluster_endpoint)
+  ca_certificate = base64decode(local.cluster_auth_base64)
+  timeout        = "300"
 
-#   depends_on = [
-#     aws_eks_cluster.main,
-#     aws_security_group_rule.cluster_private_access_sg_source,
-#     aws_security_group_rule.cluster_private_access_cidrs_source,
-#   ]
-# }
+  depends_on = [
+    aws_eks_cluster.main,
+    aws_security_group_rule.cluster_private_access_sg_source,
+    aws_security_group_rule.cluster_private_access_cidrs_source,
+  ]
+}

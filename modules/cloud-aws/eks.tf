@@ -52,9 +52,9 @@ resource "aws_eks_cluster" "main" {
   )
 
   timeouts {
-    create = var.cluster_create_timeout
-    delete = var.cluster_delete_timeout
-    update = var.cluster_update_timeout
+    create = "30m"
+    delete = "15m"
+    update = "60m"
   }
 
   depends_on = [

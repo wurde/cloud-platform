@@ -108,24 +108,6 @@ variable "workers_egress_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "cluster_create_timeout" {
-  description = "Timeout value when creating the EKS cluster."
-  type        = string
-  default     = "30m"
-}
-
-variable "cluster_delete_timeout" {
-  description = "Timeout value when deleting the EKS cluster."
-  type        = string
-  default     = "15m"
-}
-
-variable "cluster_update_timeout" {
-  description = "Timeout value when updating the EKS cluster."
-  type        = string
-  default     = "60m"
-}
-
 variable "worker_groups" {
   description = "A list of maps defining worker group configurations to be defined using AWS Launch Configurations."
   type        = list(any)

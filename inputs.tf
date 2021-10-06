@@ -43,17 +43,6 @@ variable "cluster_log_retention_in_days" {
   default     = 90
 }
 
-variable "write_kubeconfig" {
-  description = "Whether to write a Kubectl config file containing the cluster configuration. Saved to kubeconfig_output_path."
-  type        = bool
-  default     = true
-}
-variable "kubeconfig_output_path" {
-  description = "Where to save the Kubectl config file (if write_kubeconfig = true)."
-  type        = string
-  default     = "./"
-}
-
 variable "cluster_create_endpoint_private_access_sg_rule" {
   description = "Whether to create security group rules for the access to the Amazon EKS private API server endpoint. When is `true`, `cluster_endpoint_private_access_cidrs` must be setted."
   type        = bool

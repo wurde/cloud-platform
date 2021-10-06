@@ -28,16 +28,6 @@ output "cluster_certificate_authority_data" {
   depends_on  = [data.http.wait_for_cluster]
 }
 
-output "cluster_iam_role_name" {
-  description = "IAM role name of the EKS cluster."
-  value       = local.cluster_iam_role_name
-}
-
-output "cluster_iam_role_arn" {
-  description = "IAM role ARN of the EKS cluster."
-  value       = local.cluster_iam_role_arn
-}
-
 output "kubeconfig" {
   description = "kubectl config file contents for this EKS cluster."
   value       = local.kubeconfig

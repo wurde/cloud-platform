@@ -12,20 +12,7 @@ data "aws_partition" "current" {}
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones
 data "aws_availability_zones" "available" {}
 
-data "aws_ami" "eks_worker" {
-  filter {
-    name   = "name"
-    values = [local.worker_ami_name_filter]
-  }
-
-  most_recent = true
-
-  owners = ["amazon"]
-}
-
 data "http" "wait_for_cluster" {
-  count = var.cloud == "aws" ? 1 : 0
-
   url            = format("%s/healthz", local.cluster_endpoint)
   ca_certificate = base64decode(local.cluster_auth_base64)
   timeout        = "300"

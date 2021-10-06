@@ -79,7 +79,7 @@ locals {
     timeouts                          = {}                          # A map of timeouts for create/update/delete operations
 
     # Settings for launch templates
-    root_block_device_name               = concat(data.aws_ami.eks_worker.*.root_device_name, [""])[0] # Root device name for Linux workers. If not provided, will assume default Linux AMI was used.
+    #root_block_device_name               = concat(data.aws_ami.eks_worker.*.root_device_name, [""])[0] # Root device name for Linux workers. If not provided, will assume default Linux AMI was used.
     root_kms_key_id                      = ""                                                          # The KMS key to use when encrypting the root storage device
     launch_template_id                   = null                                                        # The id of the launch template used for managed node_groups
     launch_template_version              = "$Latest"                                                   # The latest version of the launch template to use in the autoscaling group

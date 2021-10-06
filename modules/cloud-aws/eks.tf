@@ -87,13 +87,68 @@ resource "aws_eks_cluster" "main" {
 # single cluster. For example creating node groups for
 # GPU or Spot workloads.
 #
+# Spot Instances can be interrupted with a two-minute
+# interruption notice when EC2 needs the capacity back.
+# So only fault-tolerant apps should be deployed there.
+# Use this `label` to schedule apps on SPOT instances:
+#
+#   eks.amazonaws.com/capacityType: SPOT
+#
+# The allocation strategy to provision Spot capacity
+# is set to capacity-optimized to ensure that your Spot
+# nodes are provisioned in the optimal Spot capacity
+# pools. To increase the number of Spot capacity pools
+# available for allocating capacity from, we recommend
+# that you configure a managed node group to use
+# multiple instance types. Instance types should have
+# the same amount of vCPU and memory resources to
+# ensure that the nodes in your cluster scale as
+# expected. For example, if you need four vCPUs and
+# eight GiB memory, we recommend that you use
+# c3.xlarge, c4.xlarge, c5.xlarge, c5d.xlarge,
+# c5a.xlarge, c5n.xlarge, or other similar instance
+# types.
+#
+# Use On-Demand Instances for fault intolerant apps.
+# This includes cluster management tools such as
+# monitoring and operational tools, deployments that
+# require StatefulSets, and stateful applications,
+# such as databases. Use this `label` to schedule apps
+# on On-Demand instances:
+#
+#   eks.amazonaws.com/capacityType: ON_DEMAND
+#
 # https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_node_group
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "main"
-  node_role_arn   = aws_iam_role.main.arn # TODO reference
-  subnet_ids      = aws_subnet.main[*].id # TODO reference
+
+  # IAM Role that provides permissions for the EKS Node Group.
+  node_role_arn = aws_iam_role.workers.arn
+
+  # Identifiers of EC2 Subnets to associate with.
+  subnet_ids = module.vpc.private_subnets
+
+  # TODO variable
+  # Type of capacity associated with the EKS Node Group.
+  # Valid values: ON_DEMAND, SPOT
+  capacity_type = "ON_DEMAND"
+
+  # TODO variable
+  # Type of AMI associated with the EKS Node Group.
+  # Defaults to AL2_x86_64. Valid values: AL2_x86_64,
+  # AL2_x86_64_GPU, AL2_ARM_64, or CUSTOM.
+  ami_type = "AL2_x86_64"
+
+  # TODO variable
+  # Disk size in GiB for worker nodes. Defaults to 20.
+  disk_size = "20"
+
+  # TODO variable
+  # Set of instance types associated with the EKS
+  # Node Group. Defaults to ["t3.medium"]
+  instance_types = ["t3.medium"]
 
   # TODO variables
   scaling_config {
@@ -104,6 +159,8 @@ resource "aws_eks_node_group" "main" {
 
   # TODO variables
   update_config {
+    # Desired max number of unavailable worker nodes
+    # during node group update.
     max_unavailable = 2
   }
 

@@ -99,7 +99,7 @@ data "aws_iam_policy_document" "workers_assume_role_policy" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
 resource "aws_iam_instance_profile" "workers" {
-  role = local.default_iam_role_id
+  role = aws_iam_role.workers.id
   tags = var.tags
 
   lifecycle {
@@ -109,7 +109,7 @@ resource "aws_iam_instance_profile" "workers" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
 resource "aws_iam_instance_profile" "workers_launch_template" {
-  role = local.default_iam_role_id
+  role = aws_iam_role.workers.id
   tags = var.tags
 
   lifecycle {

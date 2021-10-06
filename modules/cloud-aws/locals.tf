@@ -16,8 +16,6 @@ locals {
   cluster_iam_role_name = "iam-eks-cluster-${random_string.suffix.result}"
   cluster_iam_role_arn  = join("", aws_iam_role.cluster.*.arn)
 
-  default_iam_role_id = concat(aws_iam_role.workers.*.id, [""])[0]
-
   worker_group_launch_configuration_count = length(var.worker_groups)
   worker_group_launch_template_count      = length(var.worker_groups_launch_template)
 
@@ -37,7 +35,7 @@ locals {
     ami_id                       = ""            # AMI ID for the eks linux based workers. If none is provided, Terraform will search for the latest version of their EKS optimized worker AMI based on platform.
     asg_desired_capacity         = "1"           # Desired worker capacity in the autoscaling group and changing its value will not affect the autoscaling group's desired capacity because the cluster-autoscaler manages up and down scaling of the nodes. Cluster-autoscaler add nodes when pods are in pending state and remove the nodes when they are not required by modifying the desired_capacity of the autoscaling group. Although an issue exists in which if the value of the asg_min_size is changed it modifies the value of asg_desired_capacity.
     asg_max_size                 = "3"           # Maximum worker capacity in the autoscaling group.
-    asg_min_size                 = "1"           # Minimum worker capacity in the autoscaling group. NOTE: Change in this paramater will affect the asg_desired_capacity, like changing its value to 2 will change asg_desired_capacity value to 2 but bringing back it to 1 will not affect the asg_desired_capacity.
+    asg_min_size                 = "1"           # Minimum worker capacity in the autoscaling group. NOTE: Change in this paramater will affect the asg_desired_capacity, like changing its value to 2 will change asg_desired_capacity value to 2 but bringing it back to 1 will not affect the asg_desired_capacity.
     asg_force_delete             = false         # Enable forced deletion for the autoscaling group.
     asg_initial_lifecycle_hooks  = []            # Initital lifecycle hook for the autoscaling group.
     default_cooldown             = null          # The amount of time, in seconds, after a scaling activity completes before another scaling activity can start.
@@ -66,7 +64,7 @@ locals {
     additional_security_group_ids     = []                          # A list of additional security group ids to include in worker launch config
     protect_from_scale_in             = false                       # Prevent AWS from scaling in, so that cluster-autoscaler is solely responsible.
     iam_instance_profile_name         = ""                          # A custom IAM instance profile name. Used when manage_worker_iam_resources is set to false. Incompatible with iam_role_id.
-    iam_role_id                       = "local.default_iam_role_id" # A custom IAM role id. Incompatible with iam_instance_profile_name.  Literal local.default_iam_role_id will never be used but if iam_role_id is not set, the local.default_iam_role_id interpolation will be used.
+    #iam_role_id                       = "local.default_iam_role_id" # A custom IAM role id. Incompatible with iam_instance_profile_name.  Literal local.default_iam_role_id will never be used but if iam_role_id is not set, the local.default_iam_role_id interpolation will be used.
     suspended_processes               = ["AZRebalance"]             # A list of processes to suspend. i.e. ["AZRebalance", "HealthCheck", "ReplaceUnhealthy"]
     target_group_arns                 = null                        # A list of Application LoadBalancer (ALB) target group ARNs to be associated to the autoscaling group
     load_balancers                    = null                        # A list of Classic LoadBalancer (CLB)'s name to be associated to the autoscaling group

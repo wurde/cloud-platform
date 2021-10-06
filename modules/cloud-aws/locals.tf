@@ -116,10 +116,10 @@ locals {
     kubeconfig_name                   = "eks_${local.cluster_name}"
     endpoint                          = local.cluster_endpoint
     cluster_auth_base64               = local.cluster_auth_base64
-    aws_authenticator_command         = var.kubeconfig_aws_authenticator_command
-    aws_authenticator_command_args    = coalescelist(var.kubeconfig_aws_authenticator_command_args, ["token", "-i", local.cluster_name])
-    aws_authenticator_additional_args = var.kubeconfig_aws_authenticator_additional_args
-    aws_authenticator_env_variables   = var.kubeconfig_aws_authenticator_env_variables
+    aws_authenticator_command         = "aws-iam-authenticator"
+    aws_authenticator_command_args    = ["token", "-i", local.cluster_name]
+    aws_authenticator_additional_args = []
+    aws_authenticator_env_variables   = {}
   })
 }
 

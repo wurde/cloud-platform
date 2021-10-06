@@ -53,31 +53,6 @@ variable "kubeconfig_output_path" {
   type        = string
   default     = "./"
 }
-variable "kubeconfig_file_permission" {
-  description = "File permission of the Kubectl config file containing cluster configuration saved to `kubeconfig_output_path.`"
-  type        = string
-  default     = "0600"
-}
-variable "kubeconfig_aws_authenticator_command" {
-  description = "Command to use to fetch AWS EKS credentials."
-  type        = string
-  default     = "aws-iam-authenticator"
-}
-variable "kubeconfig_aws_authenticator_command_args" {
-  description = "Default arguments passed to the authenticator command. Defaults to [token -i $cluster_name]."
-  type        = list(string)
-  default     = []
-}
-variable "kubeconfig_aws_authenticator_additional_args" {
-  description = "Any additional arguments to pass to the authenticator such as the role to assume. e.g. [\"-r\", \"MyEksRole\"]."
-  type        = list(string)
-  default     = []
-}
-variable "kubeconfig_aws_authenticator_env_variables" {
-  description = "Environment variables that should be used when executing the authenticator. e.g. { AWS_PROFILE = \"eks\"}."
-  type        = map(string)
-  default     = {}
-}
 
 variable "cluster_create_endpoint_private_access_sg_rule" {
   description = "Whether to create security group rules for the access to the Amazon EKS private API server endpoint. When is `true`, `cluster_endpoint_private_access_cidrs` must be setted."

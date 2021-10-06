@@ -29,7 +29,7 @@ data "aws_ami" "eks_worker" {
 
 #   url            = format("%s/healthz", local.cluster_endpoint)
 #   ca_certificate = base64decode(local.cluster_auth_base64)
-#   timeout        = var.wait_for_cluster_timeout
+#   timeout        = "300"
 
 #   depends_on = [
 #     aws_eks_cluster.main,

@@ -152,8 +152,8 @@ resource "aws_eks_node_group" "main" {
 
   # TODO variables
   scaling_config {
-    desired_size = 1
-    max_size     = 1
+    desired_size = 2
+    max_size     = 3
     min_size     = 1
   }
 
@@ -161,7 +161,7 @@ resource "aws_eks_node_group" "main" {
   update_config {
     # Desired max number of unavailable worker nodes
     # during node group update.
-    max_unavailable = 2
+    max_unavailable = 1
   }
 
   # TODO other config? Worker group defaults (locals)?

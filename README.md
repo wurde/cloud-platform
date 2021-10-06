@@ -18,14 +18,9 @@ export AWS_SECRET_ACCESS_KEY=rUo81hDSgLuGMJ3zhA041v/GC/0ZHjOYy/Jma8Gh
 Setup the Terraform configuration.
 
 ```hcl
-# https://www.terraform.io/docs/language/settings/index.html
-# Configure some behaviors of Terraform itself.
 terraform {
-  # Specify which versions of Terraform can be used with this configuration.
   required_version = "~> v1.1"
 
-  # Stores the state as a key in a bucket on Amazon S3.
-  # https://www.terraform.io/docs/backends/types/s3.html
   backend "s3" {
     bucket = "my-terraform-backend"
     key    = "cloud-platform/k8s.example.com/terraform.tfstate"
@@ -33,31 +28,26 @@ terraform {
   }
 
   required_providers {
-    # https://registry.terraform.io/providers/hashicorp/aws
     aws = {
       source  = "hashicorp/aws"
       version = "~> 3.61"
     }
 
-    # https://registry.terraform.io/providers/hashicorp/google
     google = {
       source  = "hashicorp/google"
       version = "~> 3.86"
     }
 
-    # https://registry.terraform.io/providers/hashicorp/http
     http = {
       source  = "hashicorp/http"
       version = "~> 2.1"
     }
 
-    # https://registry.terraform.io/providers/hashicorp/local
     local = {
       source  = "hashicorp/local"
       version = "~> 2.1"
     }
 
-    # https://registry.terraform.io/providers/hashicorp/random
     random = {
       source  = "hashicorp/random"
       version = "~> 3.1"

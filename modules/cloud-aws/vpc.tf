@@ -17,8 +17,8 @@ module "vpc" {
   public_subnets  = [for k, v in data.aws_availability_zones.available.names : cidrsubnet(local.vpc_cidr, 8, k)]
   private_subnets = [for k, v in data.aws_availability_zones.available.names : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
-  enable_nat_gateway   = false # TEMP true
-  single_nat_gateway   = true
+  enable_nat_gateway = true
+  single_nat_gateway = true
 
   # The VPC must have DNS hostname and DNS resolution support,
   # or nodes can't register with the cluster.

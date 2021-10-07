@@ -18,7 +18,7 @@ resource "aws_eks_cluster" "main" {
   # https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html
   # https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html
   vpc_config {
-    security_group_ids  = compact([local.cluster_security_group_id])
+    security_group_ids = [aws_security_group.cluster.id]
 
     # List of subnet IDs. Must be in at least two different
     # availability zones. Amazon EKS creates cross-account

@@ -17,12 +17,6 @@ terraform {
       version = "~> 3.86"
     }
 
-    # https://registry.terraform.io/providers/hashicorp/http
-    http = {
-      source  = "hashicorp/http"
-      version = "~> 2.4"
-    }
-
     # https://registry.terraform.io/providers/hashicorp/local
     local = {
       source  = "hashicorp/local"

@@ -4,7 +4,7 @@ A Kubernetes environment.
 
 ## Prerequisites
 
-- A cloud account with either AWS or GCP.
+- A cloud account with AWS.
 
 ## Usage example
 

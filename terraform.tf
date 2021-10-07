@@ -16,5 +16,23 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 3.86"
     }
+
+    # https://registry.terraform.io/providers/hashicorp/http
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 2.4"
+    }
+
+    # https://registry.terraform.io/providers/hashicorp/local
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.1"
+    }
+
+    # https://registry.terraform.io/providers/hashicorp/random
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.1"
+    }
   }
 }

@@ -83,7 +83,7 @@ resource "aws_security_group" "cluster" {
 resource "aws_security_group_rule" "cluster_egress_internet" {
   description = "Allow cluster egress access to the Internet."
 
-  security_group_id = local.cluster_security_group_id
+  security_group_id = join("", aws_security_group.cluster.*.id)
   cidr_blocks       = var.cluster_egress_cidrs
 
   from_port = 0
@@ -96,7 +96,7 @@ resource "aws_security_group_rule" "cluster_private_access_cidrs_source" {
 
   description = "Allow private K8S API ingress from custom CIDR source."
 
-  security_group_id = local.cluster_security_group_id
+  security_group_id = join("", aws_security_group.cluster.*.id)
   cidr_blocks       = [each.value]
 
   from_port = 443
@@ -109,7 +109,7 @@ resource "aws_security_group_rule" "cluster_private_access_sg_source" {
 
   description = "Allow private K8S API ingress from custom Security Groups source."
 
-  security_group_id        = local.cluster_security_group_id
+  security_group_id        = join("", aws_security_group.cluster.*.id)
   source_security_group_id = var.cluster_endpoint_private_access_sg[count.index]
 
   from_port = 443
@@ -139,7 +139,7 @@ resource "aws_security_group" "workers" {
 resource "aws_security_group_rule" "workers_egress_internet" {
   description = "Allow nodes all egress to the Internet."
 
-  security_group_id = local.worker_security_group_id
+  security_group_id = join("", aws_security_group.workers.*.id)
   cidr_blocks       = var.workers_egress_cidrs
 
   from_port = 0
@@ -153,8 +153,8 @@ resource "aws_security_group_rule" "workers_egress_internet" {
 resource "aws_security_group_rule" "cluster_https_worker_ingress" {
   description = "Allow pods to communicate with the EKS cluster API."
 
-  security_group_id        = local.cluster_security_group_id
-  source_security_group_id = local.worker_security_group_id
+  security_group_id        = join("", aws_security_group.cluster.*.id)
+  source_security_group_id = join("", aws_security_group.workers.*.id)
 
   from_port = 443
   to_port   = 443

@@ -9,7 +9,7 @@
 resource "aws_eks_cluster" "main" {
   name                      = local.cluster_name
   enabled_cluster_log_types = var.cluster_enabled_log_types
-  role_arn                  = local.cluster_iam_role_arn
+  role_arn                  = join("", aws_iam_role.cluster.*.arn)
   version                   = var.cluster_version
 
   # Configuration block for the VPC associated with your cluster.

@@ -71,6 +71,32 @@ variable "node_groups" {
   default     = {}
 }
 
+variable "map_iam_roles" {
+  description = "Additional IAM roles to add to the aws-auth configmap."
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "map_iam_users" {
+  description = "Additional IAM users to add to the aws-auth configmap."
+  type = list(object({
+    userarn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "map_aws_accounts" {
+  description = "Additional AWS account numbers to add to the aws-auth configmap."
+  type        = list(string)
+  default     = []
+}
+
 variable "cluster_encryption_config" {
   description = "Configuration block with encryption configuration for the cluster."
   type = list(object({

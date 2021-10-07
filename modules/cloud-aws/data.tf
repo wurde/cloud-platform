@@ -4,6 +4,10 @@
 #
 # https://www.terraform.io/docs/language/data-sources/index.html
 
+# Current AWS caller identity
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
+data "aws_caller_identity" "current" {}
+
 # Current AWS partition.
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition
 data "aws_partition" "current" {}

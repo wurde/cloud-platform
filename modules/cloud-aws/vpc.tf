@@ -16,7 +16,7 @@ module "vpc" {
   # after cluster creation. Do not select a subnet in AWS
   # Outposts, AWS Wavelength, or an AWS Local Zone when
   # creating your cluster.
-  public_subnets  = [for k, v in data.aws_availability_zones.available.names : cidrsubnet(local.vpc_cidr, 8, k)]
+  public_subnets = [for k, v in data.aws_availability_zones.available.names : cidrsubnet(local.vpc_cidr, 8, k)]
   #private_subnets = [for k, v in data.aws_availability_zones.available.names : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
   enable_nat_gateway = false

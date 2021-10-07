@@ -25,14 +25,20 @@ resource "aws_eks_cluster" "main" {
     # elastic network interfaces in these subnets to allow
     # communication between your worker nodes and the
     # Kubernetes control plane.
-    subnet_ids              = module.vpc.private_subnets
-    endpoint_private_access = var.cluster_endpoint_private_access
-    endpoint_public_access  = var.cluster_endpoint_public_access
-    public_access_cidrs     = var.cluster_endpoint_public_access_cidrs
+    subnet_ids = module.vpc.public_subnets
+
+    # Indicates whether or not the Amazon EKS public API
+    # server endpoint is enabled.
+    endpoint_public_access = true
+    # List of CIDR blocks which can access the Amazon EKS
+    # public API server endpoint.
+    public_access_cidrs = ["0.0.0.0/0"]
+
+    endpoint_private_access = false
   }
 
   kubernetes_network_config {
-    service_ipv4_cidr = var.cluster_service_ipv4_cidr
+    service_ipv4_cidr = null
   }
 
   dynamic "encryption_config" {
@@ -128,7 +134,7 @@ resource "aws_eks_node_group" "main" {
   node_role_arn = aws_iam_role.workers.arn
 
   # Identifiers of EC2 Subnets to associate with.
-  subnet_ids = module.vpc.private_subnets
+  subnet_ids = module.vpc.public_subnets
 
   # TODO variable
   # Type of capacity associated with the EKS Node Group.

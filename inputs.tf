@@ -43,60 +43,6 @@ variable "cluster_log_retention_in_days" {
   default     = 90
 }
 
-variable "cluster_create_endpoint_private_access_sg_rule" {
-  description = "Whether to create security group rules for the access to the Amazon EKS private API server endpoint. When is `true`, `cluster_endpoint_private_access_cidrs` must be setted."
-  type        = bool
-  default     = false
-}
-
-variable "cluster_endpoint_private_access_cidrs" {
-  description = "List of CIDR blocks which can access the Amazon EKS private API server endpoint. To use this `cluster_endpoint_private_access` and `cluster_create_endpoint_private_access_sg_rule` must be set to `true`."
-  type        = list(string)
-  default     = null
-}
-
-variable "cluster_endpoint_private_access_sg" {
-  description = "List of security group IDs which can access the Amazon EKS private API server endpoint. To use this `cluster_endpoint_private_access` and `cluster_create_endpoint_private_access_sg_rule` must be set to `true`."
-  type        = list(string)
-  default     = null
-}
-
-variable "cluster_endpoint_private_access" {
-  description = "Indicates whether or not the Amazon EKS private API server endpoint is enabled."
-  type        = bool
-  default     = false
-}
-
-variable "cluster_endpoint_public_access" {
-  description = "Indicates whether or not the Amazon EKS public API server endpoint is enabled. When it's set to `false` ensure to have a proper private access with `cluster_endpoint_private_access = true`."
-  type        = bool
-  default     = true
-}
-
-variable "cluster_endpoint_public_access_cidrs" {
-  description = "List of CIDR blocks which can access the Amazon EKS public API server endpoint."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
-variable "cluster_service_ipv4_cidr" {
-  description = "Service ipv4 cidr for the kubernetes cluster"
-  type        = string
-  default     = null
-}
-
-variable "cluster_egress_cidrs" {
-  description = "List of CIDR blocks that are permitted for cluster egress traffic."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
-variable "workers_egress_cidrs" {
-  description = "List of CIDR blocks that are permitted for workers egress traffic."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
 variable "worker_groups" {
   description = "A list of maps defining worker group configurations to be defined using AWS Launch Configurations."
   type        = list(any)

@@ -12,8 +12,6 @@ locals {
   cluster_security_group_id = join("", aws_security_group.cluster.*.id)
   worker_security_group_id  = join("", aws_security_group.workers.*.id)
 
-  workers_iam_role_name = "iam-eks-workers-${random_string.suffix.result}"
-  cluster_iam_role_name = "iam-eks-cluster-${random_string.suffix.result}"
   cluster_iam_role_arn  = join("", aws_iam_role.cluster.*.arn)
 
   worker_group_launch_configuration_count = length(var.worker_groups)

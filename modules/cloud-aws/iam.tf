@@ -4,7 +4,7 @@
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "cluster" {
   # Friendly name of the role.
-  name = local.cluster_iam_role_name
+  name = "iam-eks-cluster-${random_string.suffix.result}"
 
   # (Required) Policy that grants an entity permission to assume the role.
   assume_role_policy = data.aws_iam_policy_document.cluster_assume_role_policy.json
@@ -51,25 +51,25 @@ resource "aws_iam_policy" "cluster_elb_sl_role_creation" {
 }
 resource "aws_iam_role_policy_attachment" "cluster_elb_sl_role_creation" {
   policy_arn = aws_iam_policy.cluster_elb_sl_role_creation.arn
-  role       = local.cluster_iam_role_name
+  role       = aws_iam_role.cluster.name
 }
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEKSClusterPolicy"
-  role       = local.cluster_iam_role_name
+  role       = aws_iam_role.cluster.name
 }
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSServicePolicy" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEKSServicePolicy"
-  role       = local.cluster_iam_role_name
+  role       = aws_iam_role.cluster.name
 }
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSVPCResourceControllerPolicy" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEKSVPCResourceController"
-  role       = local.cluster_iam_role_name
+  role       = aws_iam_role.cluster.name
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "workers" {
   # Friendly name of the role.
-  name = local.workers_iam_role_name
+  name = "iam-eks-workers-${random_string.suffix.result}"
 
   # (Required) Policy that grants an entity permission to assume the role.
   assume_role_policy = data.aws_iam_policy_document.workers_assume_role_policy.json
@@ -120,17 +120,17 @@ resource "aws_iam_instance_profile" "workers_launch_template" {
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
 resource "aws_iam_role_policy_attachment" "workers_AmazonEKSWorkerNodePolicy" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEKSWorkerNodePolicy"
-  role       = local.workers_iam_role_name
+  role       = aws_iam_role.workers.name
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
 resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEKS_CNI_Policy"
-  role       = local.workers_iam_role_name
+  role       = aws_iam_role.workers.name
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
 resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEC2ContainerRegistryReadOnly"
-  role       = local.workers_iam_role_name
+  role       = aws_iam_role.workers.name
 }

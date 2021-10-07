@@ -59,16 +59,30 @@ variable "worker_groups_launch_template" {
   default     = []
 }
 
-variable "node_groups_defaults" {
-  description = "Map of values to be applied to all node groups."
-  type        = any
-  default     = {}
+variable "map_iam_roles" {
+  description = "Additional IAM roles to add to the aws-auth configmap."
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
 }
 
-variable "node_groups" {
-  description = "Map of map of node groups to create."
-  type        = any
-  default     = {}
+variable "map_iam_users" {
+  description = "Additional IAM users to add to the aws-auth configmap."
+  type = list(object({
+    userarn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "map_aws_accounts" {
+  description = "Additional AWS account numbers to add to the aws-auth configmap."
+  type        = list(string)
+  default     = []
 }
 
 variable "cluster_encryption_config" {

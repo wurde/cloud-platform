@@ -23,10 +23,8 @@ locals {
   configmap_node_group_role = [
     {
       # The ARN of the IAM role to add.
-      #   Work around https://github.com/kubernetes-sigs/aws-iam-authenticator/issues/153
-      #   Strip the leading slash off so that Terraform doesn't think it's a regex
-      rolearn  = replace(aws_iam_role.workers.arn, replace(var.iam_path, "/^//", ""), "")
-      # The user name within Kubernetes to map to the IAM role.
+      rolearn = aws_iam_role.workers.arn
+      # The username within Kubernetes to map to the IAM role.
       username = "system:node:{{EC2PrivateDNSName}}"
       # A list of groups within Kubernetes to which the role is mapped.
       groups = tolist(concat([

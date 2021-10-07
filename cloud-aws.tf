@@ -11,6 +11,10 @@ module "cloud_aws" {
   workers_group_defaults        = var.workers_group_defaults
   worker_groups_launch_template = var.worker_groups_launch_template
 
+  map_iam_roles = var.map_iam_roles
+  map_iam_users = var.map_iam_users
+  map_aws_accounts = var.map_aws_accounts
+
   region = var.region
   tags   = var.tags
 }

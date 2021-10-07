@@ -59,18 +59,6 @@ variable "worker_groups_launch_template" {
   default     = []
 }
 
-variable "node_groups_defaults" {
-  description = "Map of values to be applied to all node groups."
-  type        = any
-  default     = {}
-}
-
-variable "node_groups" {
-  description = "Map of map of node groups to create."
-  type        = any
-  default     = {}
-}
-
 variable "map_iam_roles" {
   description = "Additional IAM roles to add to the aws-auth configmap."
   type = list(object({

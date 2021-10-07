@@ -49,11 +49,10 @@ resource "kubernetes_config_map" "aws_auth" {
     # should be able to authenticate.
     mapAccounts = yamlencode(concat(
       # AWS Account ID where this config is deployed.
-      [join("", data.caller_identity.current.account_id)],
+      [join("", data.aws_caller_identity.current.account_id)],
       var.map_aws_accounts,
     ))
   }
 
-  # TODO
-  depends_on = [data.http.wait_for_cluster[0]]
+  depends_on = [local.kubeconfig]
 }

@@ -108,6 +108,9 @@ module "cloud-platform" {
 | <a name="input_worker_groups"></a> [worker_groups](#input_worker_groups) | A list of maps defining worker group configurations to be defined using AWS Launch Configurations. | `list(any)` | `[]` | no |
 | <a name="input_workers_group_defaults"></a> [workers_group_defaults](#input_workers_group_defaults) | Override default values for target groups. | `any` | `[]` | no |
 | <a name="input_worker_groups_launch_template"></a> [worker_groups_launch_template](#input_worker_groups_launch_template) | A list of maps defining worker group configurations to be defined using AWS Launch Templates. | `any` | `[]` | no |
+| <a name="input_map_iam_roles"></a> [map_iam_roles](#input_map_iam_roles) | Additional IAM roles to add to the aws-auth configmap. | `list(object({ rolearn = string, username = string, groups = list(string) }))` | `[]` | no |
+| <a name="input_map_iam_users"></a> [map_iam_users](#input_map_iam_users) | Additional IAM users to add to the aws-auth configmap. | `list(object({ userarn = string, username = string, groups = list(string) }))` | `[]` | no |
+| <a name="input_map_aws_accounts"></a> [map_aws_accounts](#input_map_aws_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(object({ userarn = string, username = string, groups = list(string) }))` | `[]` | no |
 
 ## Outputs
 

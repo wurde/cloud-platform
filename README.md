@@ -116,6 +116,7 @@ module "cloud-platform" {
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cluster_name"></a> [cluster_name](#output_cluster_name) | The name of the EKS cluster. |
 | <a name="output_cluster_id"></a> [cluster_id](#output_cluster_id) | The ID of the EKS cluster. |
 | <a name="output_cluster_arn"></a> [cluster_arn](#output_cluster_arn) | The Amazon Resource Name (ARN) of the cluster. |
 | <a name="output_cluster_version"></a> [cluster_version](#output_cluster_version) | The Kubernetes server version for the EKS cluster. |

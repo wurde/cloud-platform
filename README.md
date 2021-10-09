@@ -33,11 +33,6 @@ terraform {
       version = "~> 3.61"
     }
 
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 3.86"
-    }
-
     local = {
       source  = "hashicorp/local"
       version = "~> 2.1"
@@ -87,18 +82,10 @@ module "cloud-platform" {
 }
 ```
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| cloud-aws | ./modules/cloud-aws |  |
-| cloud-gcp | ./modules/cloud-gcp |  |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloud"></a> [cloud](#input_cloud) | What cloud do you want to deploy to? AWS or GCP? | `string` | `aws` | no |
 | <a name="input_region"></a> [region](#input_region) | What region do you want to deploy to? | `string` | `us-east-2` | no |
 | <a name="input_cluster_version"></a> [cluster_version](#input_cluster_version) | Kubernetes version to use for the EKS cluster. | `string` | `1.21` | no |
 | <a name="input_cluster_enabled_log_types"></a> [cluster_enabled_log_types](#input_cluster_enabled_log_types) | A list of the desired control plane logging to enable. For more information, see Amazon EKS Control Plane Logging documentation (https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html) | `list(string)` | `[]` | no |

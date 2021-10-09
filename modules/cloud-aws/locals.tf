@@ -38,7 +38,7 @@ locals {
 
   configmap_root_user = [{
     rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-    username = "admin"
+    username = "cluster-admin"
     groups   = ["system:masters"]
   }]
 

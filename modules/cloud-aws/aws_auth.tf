@@ -49,7 +49,7 @@ resource "kubernetes_config_map" "aws_auth" {
     mapUsers = yamlencode(
       distinct(concat(
         # Add the root AWS user as a Kubernetes Admin.
-        local.configmap_root_user_role,
+        local.configmap_root_user,
         var.map_iam_users,
       ))
     )
@@ -58,11 +58,11 @@ resource "kubernetes_config_map" "aws_auth" {
     # the users have the correct IAM
     # permissions to connect then they
     # should be able to authenticate.
-    mapAccounts = yamlencode(concat(
-      # AWS Account ID where this config is deployed.
-      [data.aws_caller_identity.current.account_id],
-      var.map_aws_accounts,
-    ))
+    mapAccounts = yamlencode(
+      distinct(concat(
+        var.map_aws_accounts,
+      ))
+    )
   }
 
   depends_on = [local.kubeconfig]

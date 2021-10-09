@@ -19,20 +19,28 @@ locals {
   eks_principal     = "eks.${data.aws_partition.current.dns_suffix}"
   policy_arn_prefix = "arn:${data.aws_partition.current.partition}:iam::aws:policy"
 
-  # Convert to format needed by aws-auth ConfigMap
-  configmap_node_group_role = [
-    {
-      # The ARN of the IAM role to add.
-      rolearn = aws_iam_role.workers.arn
-      # The username within Kubernetes to map to the IAM role.
-      username = "system:node:{{EC2PrivateDNSName}}"
-      # A list of groups within Kubernetes to which the role is mapped.
-      groups = tolist(concat([
-        "system:bootstrappers",
-        "system:nodes",
-      ]))
-    }
-  ]
+  # During bootstrapping the EKS cluster uses the Node Authorization
+  # mode to allow nodes to register themselves.  It requires that
+  # each node belongs to the group `system:nodes` with a  username
+  # of `system:node:<nodeName>`.
+  configmap_node_group_role = [{
+    # IAM role associated with your nodes. Format of the role ARN
+    # must be arn:aws:iam::<123456789012>:role/<role-name>
+    rolearn = aws_iam_role.workers.arn
+    # The username within Kubernetes to map to the IAM role.
+    username = "system:node:{{EC2PrivateDNSName}}"
+    # A list of groups within Kubernetes to which the role is mapped.
+    groups = tolist(concat([
+      "system:bootstrappers",
+      "system:nodes",
+    ]))
+  }]
+
+  configmap_root_user_role = [{
+    rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+    username = "admin"
+    groups   = ["system:masters"]
+  }]
 
   kubeconfig = templatefile("${path.module}/../../templates/kubeconfig.tpl", {
     kubeconfig_name                   = "eks_${local.cluster_name}"

@@ -48,8 +48,10 @@ resource "kubernetes_config_map" "aws_auth" {
     # IAM Users
     mapUsers = yamlencode(
       distinct(concat(
-        # Add the root AWS user as a Kubernetes Admin.
+        # Add the IAM root user.
         local.configmap_root_user,
+        # Add the IAM user KubernetesAdmin.
+        local.configmap_kubernetes_admin_user,
         var.map_iam_users,
       ))
     )

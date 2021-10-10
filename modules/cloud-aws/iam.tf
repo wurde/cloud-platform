@@ -42,6 +42,7 @@ data "aws_iam_policy_document" "cluster_elb_sl_role_creation" {
     resources = ["*"]
   }
 }
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
 resource "aws_iam_policy" "cluster_elb_sl_role_creation" {
   name_prefix = "${local.cluster_name}-elb-sl-role-creation"
   description = "Permissions for EKS to create AWSServiceRoleForElasticLoadBalancing service-linked role"
@@ -77,7 +78,6 @@ resource "aws_iam_role" "workers" {
   # Whether to force detaching any policies the role has before destroying it.
   force_detach_policies = true
 
-  # Key-value mapping of tags for the IAM role.
   tags = var.tags
 }
 # Generates an IAM policy document in JSON format.
@@ -133,4 +133,41 @@ resource "aws_iam_role_policy_attachment" "workers_AmazonEKS_CNI_Policy" {
 resource "aws_iam_role_policy_attachment" "workers_AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "${local.policy_arn_prefix}/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.workers.name
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user
+resource "aws_iam_user" "kubernetes_admin" {
+  name = "KubernetesAdmin"
+  tags = var.tags
+
+  force_destroy = true
+}
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
+data "aws_iam_policy_document" "kubernetes_admin" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "eks:DescribeNodegroup",
+      "eks:ListNodegroups",
+      "eks:DescribeCluster",
+      "eks:ListClusters",
+      "eks:AccessKubernetesApi",
+      "ssm:GetParameter",
+      "eks:ListUpdates",
+      "eks:ListFargateProfiles",
+    ]
+    resources = ["*"]
+  }
+}
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
+resource "aws_iam_policy" "kubernetes_admin" {
+  description = "View nodes and workloads for all clusters in the AWS Management Console."
+  policy      = data.aws_iam_policy_document.kubernetes_admin.json
+
+  tags = var.tags
+}
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user_policy_attachment
+resource "aws_iam_user_policy_attachment" "kubernetes_admin" {
+  policy_arn = aws_iam_policy.kubernetes_admin.arn
+  user       = aws_iam_user.kubernetes_admin.name
 }

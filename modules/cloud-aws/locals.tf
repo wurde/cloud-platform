@@ -42,6 +42,12 @@ locals {
     groups   = ["system:masters"]
   }]
 
+  configmap_kubernetes_admin_user = [{
+    rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/KubernetesAdmin"
+    username = "kubernetes-admin"
+    groups   = ["system:masters"]
+  }]
+
   kubeconfig = templatefile("${path.module}/../../templates/kubeconfig.tpl", {
     kubeconfig_name                   = "eks_${local.cluster_name}"
     endpoint                          = local.cluster_endpoint

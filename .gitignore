@@ -38,6 +38,7 @@ terraform.rc
 
 # Ignore temporary files
 **/tmp/*
+**/tmp-*
 
 # Ignore .kube config files
 **/.kube/*

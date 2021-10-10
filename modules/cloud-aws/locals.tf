@@ -37,13 +37,13 @@ locals {
   }]
 
   configmap_root_user = [{
-    rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+    userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
     username = "cluster-admin"
     groups   = ["system:masters"]
   }]
 
   configmap_kubernetes_admin_user = [{
-    rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/KubernetesAdmin"
+    userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/KubernetesAdmin"
     username = "kubernetes-admin"
     groups   = ["system:masters"]
   }]

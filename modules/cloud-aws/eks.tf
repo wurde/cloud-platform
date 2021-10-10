@@ -160,7 +160,7 @@ resource "aws_eks_node_group" "main" {
   scaling_config {
     desired_size = 1
     max_size     = 3
-    min_size     = 0
+    min_size     = 1
   }
 
   # TODO variables

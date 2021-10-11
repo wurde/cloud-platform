@@ -27,11 +27,10 @@ locals {
       capacity_type              = "ON_DEMAND"
       ami_type                   = "AL2_x86_64"
       instance_types             = ["t3.medium"]
-      desired_capacity           = "1"
-      max_capacity               = "3"
-      min_capacity               = "1"
+      desired_capacity           = 1
+      max_capacity               = 3
+      min_capacity               = 1
       disk_size                  = 20
-      disk_type                  = "gp2"
       max_unavailable_percentage = 25
       create_launch_template     = false
     },

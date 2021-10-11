@@ -62,13 +62,15 @@ module "cloud-platform" {
   worker_groups = [
     {
       name                 = "worker-group-1"
-      instance_type        = "t2.small"
+      capacity_type        = "ON_DEMAND"
+      instance_types       = ["t2.small"]
       additional_userdata  = "echo foo bar"
       asg_desired_capacity = 2
     },
     {
       name                 = "worker-group-2"
-      instance_type        = "t2.medium"
+      capacity_type        = "SPOT"
+      instance_types       = ["t2.medium"]
       additional_userdata  = "echo foo bar"
       asg_desired_capacity = 1
     },

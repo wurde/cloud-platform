@@ -147,52 +147,26 @@ resource "aws_eks_node_group" "workers" {
   # Example: capacity_type = "ON_DEMAND"
   capacity_type = lookup(each.value, "capacity_type", null)
 
-  scaling_config {
-    desired_size = each.value["desired_capacity"]
-    max_size     = each.value["max_capacity"]
-    min_size     = each.value["min_capacity"]
-  }
-
   # Type of AMI associated with the EKS Node Group.
   # Defaults to AL2_x86_64. Valid values: AL2_x86_64,
   # AL2_x86_64_GPU, AL2_ARM_64, or CUSTOM.
   # Example: ami_type = "AL2_x86_64"
   ami_type = lookup(each.value, "ami_type", null)
 
-  # Disk size in GiB for worker nodes. Defaults to 20.
-  # Example: disk_size = "100"
-  disk_size = each.value["launch_template_id"] != null || each.value["create_launch_template"] ? null : lookup(each.value, "disk_size", null)
-
   # Set of instance types associated with the EKS
   # Node Group. Defaults to ["t3.medium"]
   # Example: instance_types = ["t3.medium"]
-  instance_types = !each.value["set_instance_types_on_lt"] ? each.value["instance_types"] : null
+  instance_types = each.value["instance_types"]
 
-  dynamic "launch_template" {
-    for_each = each.value["launch_template_id"] != null ? [{
-      id      = each.value["launch_template_id"]
-      version = each.value["launch_template_version"]
-    }] : []
-
-    content {
-      id      = launch_template.value["id"]
-      version = launch_template.value["version"]
-    }
+  scaling_config {
+    desired_size = each.value["desired_capacity"]
+    max_size     = each.value["max_capacity"]
+    min_size     = each.value["min_capacity"]
   }
 
-  dynamic "launch_template" {
-    for_each = each.value["launch_template_id"] == null && each.value["create_launch_template"] ? [{
-      id = aws_launch_template.workers[each.key].id
-      version = each.value["launch_template_version"] == "$Latest" ? aws_launch_template.workers[each.key].latest_version : (
-        each.value["launch_template_version"] == "$Default" ? aws_launch_template.workers[each.key].default_version : each.value["launch_template_version"]
-      )
-    }] : []
-
-    content {
-      id      = launch_template.value["id"]
-      version = launch_template.value["version"]
-    }
-  }
+  # Disk size in GiB for worker nodes. Defaults to 20.
+  # Example: disk_size = "100"
+  disk_size = lookup(each.value, "disk_size", null)
 
   # Desired max number of unavailable worker nodes
   # during node group update.

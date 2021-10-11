@@ -24,15 +24,16 @@ locals {
   # https://www.terraform.io/docs/language/functions/merge.html
   node_groups_expanded = { for k, v in var.node_groups : k => merge(
     {
-      capacity_type           = "ON_DEMAND"
-      ami_type                = "AL2_x86_64"
-      instance_types          = ["t3.medium"]
-      desired_capacity        = "1"
-      max_capacity            = "3"
-      min_capacity            = "1"
-      disk_size               = "20"
-      disk_type               = "gp2"
-      create_launch_template  = false
+      capacity_type              = "ON_DEMAND"
+      ami_type                   = "AL2_x86_64"
+      instance_types             = ["t3.medium"]
+      desired_capacity           = "1"
+      max_capacity               = "3"
+      min_capacity               = "1"
+      disk_size                  = 20
+      disk_type                  = "gp2"
+      max_unavailable_percentage = 25
+      create_launch_template     = false
     },
     var.node_groups_defaults,
     v,

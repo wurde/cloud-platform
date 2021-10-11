@@ -80,15 +80,6 @@ variable "map_aws_accounts" {
   default     = []
 }
 
-variable "cluster_encryption_config" {
-  description = "Configuration block with encryption configuration for the cluster."
-  type = list(object({
-    provider_key_arn = string
-    resources        = list(string)
-  }))
-  default = []
-}
-
 variable "tags" {
   description = "A map of tags to add to all resources. Tags added to launch configuration or templates override these values for ASG Tags only."
   type        = map(string)

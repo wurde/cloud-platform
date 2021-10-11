@@ -41,17 +41,6 @@ resource "aws_eks_cluster" "main" {
     service_ipv4_cidr = null
   }
 
-  dynamic "encryption_config" {
-    for_each = toset(var.cluster_encryption_config)
-
-    content {
-      provider {
-        key_arn = encryption_config.value["provider_key_arn"]
-      }
-      resources = encryption_config.value["resources"]
-    }
-  }
-
   tags = merge(
     var.tags,
     {},
@@ -145,13 +134,13 @@ resource "aws_eks_node_group" "workers" {
   # Type of capacity associated with the EKS Node Group.
   # Valid values: ON_DEMAND, SPOT
   # Example: capacity_type = "ON_DEMAND"
-  capacity_type = lookup(each.value, "capacity_type", null)
+  capacity_type = lookup(each.value, "capacity_type", "ON_DEMAND")
 
   # Type of AMI associated with the EKS Node Group.
   # Defaults to AL2_x86_64. Valid values: AL2_x86_64,
   # AL2_x86_64_GPU, AL2_ARM_64, or CUSTOM.
   # Example: ami_type = "AL2_x86_64"
-  ami_type = lookup(each.value, "ami_type", null)
+  ami_type = lookup(each.value, "ami_type", "AL2_x86_64")
 
   # Set of instance types associated with the EKS
   # Node Group. Defaults to ["t3.medium"]
@@ -165,18 +154,13 @@ resource "aws_eks_node_group" "workers" {
   }
 
   # Disk size in GiB for worker nodes. Defaults to 20.
-  # Example: disk_size = "100"
-  disk_size = lookup(each.value, "disk_size", null)
+  # Example: disk_size = 100
+  disk_size = lookup(each.value, "disk_size", 20)
 
-  # Desired max number of unavailable worker nodes
+  # Desired max percentage of unavailable worker nodes
   # during node group update.
-  dynamic "update_config" {
-    for_each = try(each.value.update_config.max_unavailable_percentage > 0, each.value.update_config.max_unavailable > 0, false) ? [true] : []
-
-    content {
-      max_unavailable_percentage = try(each.value.update_config.max_unavailable_percentage, null)
-      max_unavailable            = try(each.value.update_config.max_unavailable, null)
-    }
+  update_config {
+    max_unavailable_percentage = lookup(each.value, "max_unavailable_percentage", 25)
   }
 
   labels = merge(

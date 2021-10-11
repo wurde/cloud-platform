@@ -126,9 +126,15 @@ resource "aws_eks_cluster" "main" {
 #
 # https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_node_group
-resource "aws_eks_node_group" "main" {
-  cluster_name    = aws_eks_cluster.main.name
-  node_group_name = "main"
+resource "aws_eks_node_group" "workers" {
+  for_each = local.node_groups_expanded
+
+  # Name of the EKS Node Group.
+  # Example: node_group_name = "main"
+  node_group_name = lookup(each.value, "name", null)
+
+  # Name of the EKS Cluster.
+  cluster_name = aws_eks_cluster.main.name
 
   # IAM Role that provides permissions for the EKS Node Group.
   node_role_arn = aws_iam_role.workers.arn
@@ -136,65 +142,10 @@ resource "aws_eks_node_group" "main" {
   # Identifiers of EC2 Subnets to associate with.
   subnet_ids = module.vpc.public_subnets
 
-  # TODO variable
   # Type of capacity associated with the EKS Node Group.
   # Valid values: ON_DEMAND, SPOT
-  capacity_type = "ON_DEMAND"
-
-  # TODO variable
-  # Type of AMI associated with the EKS Node Group.
-  # Defaults to AL2_x86_64. Valid values: AL2_x86_64,
-  # AL2_x86_64_GPU, AL2_ARM_64, or CUSTOM.
-  ami_type = "AL2_x86_64"
-
-  # TODO variable
-  # Disk size in GiB for worker nodes. Defaults to 20.
-  disk_size = "20"
-
-  # TODO variable
-  # Set of instance types associated with the EKS
-  # Node Group. Defaults to ["t3.medium"]
-  instance_types = ["t3.medium"]
-
-  # TODO variables
-  scaling_config {
-    desired_size = 1
-    max_size     = 3
-    min_size     = 1
-  }
-
-  # TODO variables
-  update_config {
-    # Desired max number of unavailable worker nodes
-    # during node group update.
-    max_unavailable = 1
-  }
-
-  # TODO other config? Worker group defaults (locals)?
-
-  # Allow external changes without Terraform plan difference
-  lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
-  }
-
-  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
-  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
-  depends_on = [
-    aws_iam_role_policy_attachment.workers_AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.workers_AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.workers_AmazonEC2ContainerRegistryReadOnly,
-  ]
-}
-
-resource "aws_eks_node_group" "workers" {
-  for_each = local.node_groups_expanded
-
-  node_group_name_prefix = lookup(each.value, "name", null) == null ? local.node_groups_names[each.key] : null
-  node_group_name        = lookup(each.value, "name", null)
-
-  cluster_name  = var.cluster_name
-  node_role_arn = each.value["iam_role_arn"]
-  subnet_ids    = each.value["subnets"]
+  # Example: capacity_type = "ON_DEMAND"
+  capacity_type = lookup(each.value, "capacity_type", null)
 
   scaling_config {
     desired_size = each.value["desired_capacity"]
@@ -202,24 +153,20 @@ resource "aws_eks_node_group" "workers" {
     min_size     = each.value["min_capacity"]
   }
 
-  ami_type             = lookup(each.value, "ami_type", null)
-  disk_size            = each.value["launch_template_id"] != null || each.value["create_launch_template"] ? null : lookup(each.value, "disk_size", null)
-  instance_types       = !each.value["set_instance_types_on_lt"] ? each.value["instance_types"] : null
-  release_version      = lookup(each.value, "ami_release_version", null)
-  capacity_type        = lookup(each.value, "capacity_type", null)
-  force_update_version = lookup(each.value, "force_update_version", null)
+  # Type of AMI associated with the EKS Node Group.
+  # Defaults to AL2_x86_64. Valid values: AL2_x86_64,
+  # AL2_x86_64_GPU, AL2_ARM_64, or CUSTOM.
+  # Example: ami_type = "AL2_x86_64"
+  ami_type = lookup(each.value, "ami_type", null)
 
-  dynamic "remote_access" {
-    for_each = each.value["key_name"] != "" && each.value["launch_template_id"] == null && !each.value["create_launch_template"] ? [{
-      ec2_ssh_key               = each.value["key_name"]
-      source_security_group_ids = lookup(each.value, "source_security_group_ids", [])
-    }] : []
+  # Disk size in GiB for worker nodes. Defaults to 20.
+  # Example: disk_size = "100"
+  disk_size = each.value["launch_template_id"] != null || each.value["create_launch_template"] ? null : lookup(each.value, "disk_size", null)
 
-    content {
-      ec2_ssh_key               = remote_access.value["ec2_ssh_key"]
-      source_security_group_ids = remote_access.value["source_security_group_ids"]
-    }
-  }
+  # Set of instance types associated with the EKS
+  # Node Group. Defaults to ["t3.medium"]
+  # Example: instance_types = ["t3.medium"]
+  instance_types = !each.value["set_instance_types_on_lt"] ? each.value["instance_types"] : null
 
   dynamic "launch_template" {
     for_each = each.value["launch_template_id"] != null ? [{
@@ -247,16 +194,8 @@ resource "aws_eks_node_group" "workers" {
     }
   }
 
-  dynamic "taint" {
-    for_each = each.value["taints"]
-
-    content {
-      key    = taint.value["key"]
-      value  = taint.value["value"]
-      effect = taint.value["effect"]
-    }
-  }
-
+  # Desired max number of unavailable worker nodes
+  # during node group update.
   dynamic "update_config" {
     for_each = try(each.value.update_config.max_unavailable_percentage > 0, each.value.update_config.max_unavailable > 0, false) ? [true] : []
 
@@ -264,12 +203,6 @@ resource "aws_eks_node_group" "workers" {
       max_unavailable_percentage = try(each.value.update_config.max_unavailable_percentage, null)
       max_unavailable            = try(each.value.update_config.max_unavailable, null)
     }
-  }
-
-  timeouts {
-    create = lookup(each.value["timeouts"], "create", null)
-    update = lookup(each.value["timeouts"], "update", null)
-    delete = lookup(each.value["timeouts"], "delete", null)
   }
 
   labels = merge(
@@ -283,6 +216,7 @@ resource "aws_eks_node_group" "workers" {
     lookup(var.node_groups[each.key], "additional_tags", {}),
   )
 
+  # Allow external changes without Terraform plan difference
   lifecycle {
     create_before_destroy = true
     ignore_changes        = [scaling_config[0].desired_size]

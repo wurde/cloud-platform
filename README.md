@@ -55,12 +55,12 @@ module "cloud-platform" {
   cloud  = "aws"
   region = "us-east-2"
 
-  workers_group_defaults = {
-    root_volume_type = "gp2"
+  node_group_defaults = {
+    disk_size = 50
   }
 
-  worker_groups = [
-    {
+  node_groups = {
+    main = {
       name             = "worker-group-1"
       capacity_type    = "ON_DEMAND"
       instance_types   = ["t2.small"]
@@ -68,7 +68,7 @@ module "cloud-platform" {
       max_capacity     = 2
       min_capacity     = 1
     },
-    {
+    secondary = {
       name             = "worker-group-2"
       capacity_type    = "SPOT"
       instance_types   = ["t2.medium"]

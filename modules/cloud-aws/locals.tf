@@ -32,7 +32,6 @@ locals {
       min_capacity               = 1
       disk_size                  = 20
       max_unavailable_percentage = 25
-      create_launch_template     = false
     },
     var.node_groups_defaults,
     v,

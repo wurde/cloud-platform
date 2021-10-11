@@ -1,3 +1,8 @@
+output "region" {
+  description = "AWS or GCP region."
+  value       = var.region
+}
+
 output "cluster_name" {
   description = "The name of the EKS cluster."
   value       = module.cloud_aws.0.cluster_name

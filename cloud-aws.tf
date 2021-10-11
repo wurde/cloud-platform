@@ -7,9 +7,8 @@ module "cloud_aws" {
   cluster_log_retention_in_days = var.cluster_log_retention_in_days
   cluster_log_kms_key_id        = var.cluster_log_kms_key_id
 
-  worker_groups                 = var.worker_groups
-  workers_group_defaults        = var.workers_group_defaults
-  worker_groups_launch_template = var.worker_groups_launch_template
+  node_groups          = var.node_groups
+  node_groups_defaults = var.node_groups_defaults
 
   map_iam_roles    = var.map_iam_roles
   map_iam_users    = var.map_iam_users

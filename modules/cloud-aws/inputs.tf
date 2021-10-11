@@ -43,20 +43,15 @@ variable "cluster_log_retention_in_days" {
   default     = 90
 }
 
-variable "worker_groups" {
-  description = "A list of maps defining worker group configurations to be defined using AWS Launch Configurations."
-  type        = list(any)
-  default     = []
-}
-variable "workers_group_defaults" {
-  description = "Override default values for target groups. See workers_group_defaults_defaults in local.tf for valid keys."
+variable "node_groups" {
+  description = "Map of managed EKS node groups to create."
   type        = any
   default     = {}
 }
-variable "worker_groups_launch_template" {
-  description = "A list of maps defining worker group configurations to be defined using AWS Launch Templates."
+variable "node_groups_defaults" {
+  description = "Map of values to be applied to all EKS node groups."
   type        = any
-  default     = []
+  default     = {}
 }
 
 variable "map_iam_roles" {
